@@ -48,9 +48,9 @@ def parse_args(argv=None):
                         help="同时导出 PARTIAL 文献（默认仅导出 YES）")
     parser.add_argument("--min-score", type=int, default=None,
                         help="最低分数要求（可选，与质量判定同时生效）")
-    parser.add_argument("--formats", nargs="+", choices=["jsonl", "md"],
+    parser.add_argument("--formats", nargs="+", choices=["jsonl", "md", "csv"],
                         default=["jsonl", "md"],
-                        help="导出格式（默认：jsonl md）")
+                        help="导出格式（默认：jsonl md；csv 为评估结果表，可用 Excel 打开）")
     return parser.parse_args(argv)
 
 
@@ -99,6 +99,22 @@ def export_jsonl(selected, texts_by_name, out_file):
                 },
             }
             f.write(json.dumps(record, ensure_ascii=False) + "\n")
+
+
+def export_csv(selected, out_file):
+    """导出评估结果表（utf-8-sig 带 BOM，Excel 打开不乱码）。"""
+    import csv
+    with open(out_file, "w", encoding="utf-8-sig", newline="") as f:
+        writer = csv.writer(f)
+        writer.writerow(["file_name", "quality", "score", "reason", "summary"])
+        for row in selected:
+            writer.writerow([
+                row.get("file_name"),
+                row.get("quality"),
+                row.get("score"),
+                row.get("reason"),
+                row.get("summary"),
+            ])
 
 
 def export_markdown(selected, texts_by_name, md_dir):
@@ -150,6 +166,11 @@ def main(argv=None):
         jsonl_file = out_dir / "corpus.jsonl"
         export_jsonl(selected, texts_by_name, jsonl_file)
         print(f"[OK] JSONL 语料已导出：{jsonl_file}（{len(selected)} 篇）")
+
+    if "csv" in args.formats:
+        csv_file = out_dir / "corpus_eval.csv"
+        export_csv(selected, csv_file)
+        print(f"[OK] CSV 结果表已导出：{csv_file}（{len(selected)} 篇）")
 
     if "md" in args.formats:
         md_dir = out_dir / "markdown"

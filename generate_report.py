@@ -38,6 +38,8 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="生成交互式 HTML 评估报告")
     parser.add_argument("--input", default=str(BASE_DIR / "output_results_batch.json"),
                         help="评估结果 JSON（默认：./output_results_batch.json）")
+    parser.add_argument("--texts", default=str(BASE_DIR / "input.json"),
+                        help="原始文档文本 JSON（默认：./input.json）")
     parser.add_argument("--output", default=str(BASE_DIR / "report.html"),
                         help="HTML 报告输出路径（默认：./report.html）")
     parser.add_argument("--charts-dir", default=None,
@@ -115,6 +117,38 @@ def make_charts(stats, charts_dir=None):
         plt.close(fig)
 
     return images
+
+
+def add_keywords_chart(images, docs, charts_dir=None):
+    """语料关键词条形图（复用 search_papers 的 TF-IDF 分词）。"""
+    if not docs:
+        return
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "sans-serif"]
+        plt.rcParams["axes.unicode_minus"] = False
+    except ImportError:
+        return
+
+    from search_papers import top_keywords
+    pairs = top_keywords(docs)
+    if not pairs:
+        return
+
+    terms = [t for t, _ in pairs][::-1]
+    weights = [w for _, w in pairs][::-1]
+
+    fig, ax = plt.subplots(figsize=(6.4, 4.2), dpi=110)
+    ax.barh(terms, weights, color="#4a7ebb")
+    ax.set_xlabel("TF-IDF 权重")
+    ax.set_title("语料高频关键词（YES 文献）")
+    fig.tight_layout()
+    images["keywords"] = _fig_to_base64(fig)
+    if charts_dir:
+        _save_png(fig, charts_dir, "keywords_bar.png")
+    plt.close(fig)
 
 
 def _fig_to_base64(fig):
@@ -221,6 +255,7 @@ footer {{ text-align:center; color:#6a737d; font-size:12px; padding:20px; }}
     <section class="charts">
         {donut_figure}
         {hist_figure}
+        {keywords_figure}
     </section>
 
     <div class="toolbar">
@@ -290,6 +325,8 @@ def build_html(rows, stats, images):
                     f'alt="质量判定占比"></figure>') if "donut" in images else ""
     hist_figure = (f'<figure><img src="data:image/png;base64,{images["hist"]}" '
                    f'alt="评分分布"></figure>') if "hist" in images else ""
+    keywords_figure = (f'<figure><img src="data:image/png;base64,{images["keywords"]}" '
+                       f'alt="高频关键词"></figure>') if "keywords" in images else ""
     qc = stats["quality_counts"]
     return PAGE_TEMPLATE.format(
         generated_at=datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -299,6 +336,7 @@ def build_html(rows, stats, images):
         avg_score=stats["avg_score"],
         donut_figure=donut_figure,
         hist_figure=hist_figure,
+        keywords_figure=keywords_figure,
         rows=build_rows_html(rows),
     )
 
@@ -309,9 +347,15 @@ def main(argv=None):
 
     with open(args.input, "r", encoding="utf-8") as f:
         rows = json.load(f)
+    with open(args.texts, "r", encoding="utf-8") as f:
+        texts = json.load(f)
+    texts_by_name = {t.get("file_name"): t.get("text", "") for t in texts}
+    docs = [(r["file_name"], texts_by_name.get(r["file_name"], ""))
+            for r in rows if r.get("quality") == "YES"]
 
     stats = compute_stats(rows)
     images = make_charts(stats, args.charts_dir)
+    add_keywords_chart(images, docs, args.charts_dir)
     page = build_html(rows, stats, images)
 
     with open(args.output, "w", encoding="utf-8") as f:
