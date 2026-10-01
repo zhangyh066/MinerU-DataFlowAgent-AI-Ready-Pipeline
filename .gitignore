@@ -1,6 +1,9 @@
 # 敏感信息：API 密钥等，切勿上传
 .env
 
+# 运行时缓存（断点续跑，可随时重建）
+eval_cache.jsonl
+
 # Python
 __pycache__/
 *.pyc

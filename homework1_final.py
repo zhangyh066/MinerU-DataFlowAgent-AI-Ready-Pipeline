@@ -28,6 +28,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from convert_mineru_jsons import content_fingerprint
+
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -265,17 +267,81 @@ def is_failed_record(record):
     return parsed is None
 
 
+# ================= 断点续跑缓存 =================
+# 以文档内容的指纹为键缓存评估结果：文档内容没变就直接复用上次结果，
+# 重跑时只调用 API 处理新增/变更的文档，避免重复消耗额度。
+def load_eval_cache(cache_file):
+    """读取缓存，返回 {指纹: {"file_name": ..., "result": ...}}（后者覆盖前者）。"""
+    cache = {}
+    path = Path(cache_file)
+    if not path.exists():
+        return cache
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            fp = entry.get("fp")
+            if fp:
+                cache[fp] = entry
+    return cache
+
+
+def append_eval_cache(cache_file, item, record):
+    """把一条成功的评估结果追加写入缓存文件。"""
+    text = item.get("text")
+    if not isinstance(text, str) or not text.strip():
+        return
+    entry = {
+        "fp": content_fingerprint(text),
+        "file_name": item.get("file_name"),
+        "result": record.get("result") if isinstance(record, dict) else None,
+    }
+    with open(cache_file, "a", encoding="utf-8") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+
+
 # ================= 执行与重试 =================
 def run_all_batches(data, args):
-    """分批执行全部数据；对失败条目自动重试 args.max_retries 轮。"""
+    """分批执行全部数据；命中缓存的文档直接复用结果；
+    其余走 API，并对失败条目自动重试 args.max_retries 轮。"""
     results_by_key = {}
 
     def key_of(item, idx):
         return item.get("file_name") or f"#{idx}"
 
-    pending = [(key_of(item, i), item) for i, item in enumerate(data)]
+    eval_cache = {} if args.no_cache else load_eval_cache(args.cache_file)
+
+    def cache_lookup(item):
+        text = item.get("text")
+        if not isinstance(text, str) or not text.strip():
+            return None
+        entry = eval_cache.get(content_fingerprint(text))
+        if not entry:
+            return None
+        record = {"file_name": item.get("file_name"), "result": entry.get("result")}
+        return None if is_failed_record(record) else record
+
+    pending = []
+    cached_count = 0
+    for i, item in enumerate(data):
+        cached_record = cache_lookup(item)
+        if cached_record is not None:
+            results_by_key[key_of(item, i)] = cached_record
+            cached_count += 1
+        else:
+            pending.append((key_of(item, i), item))
+
+    if cached_count:
+        print(f"命中缓存 {cached_count} 条（内容未变化，直接复用结果）")
 
     for round_idx in range(args.max_retries + 1):
+        if not pending:
+            break
         if round_idx > 0:
             print(f"\n===== 第 {round_idx} 轮重试：{len(pending)} 条失败条目 =====")
             if args.sleep > 0:
@@ -304,10 +370,10 @@ def run_all_batches(data, args):
                     next_pending.append((key, item))
                 else:
                     results_by_key[key] = record
+                    if not args.no_cache:
+                        append_eval_cache(args.cache_file, item, record)
 
         pending = next_pending
-        if not pending:
-            break
 
     # 最终仍失败的条目也保留占位，保证输出条目数与输入一致
     for key, item in pending:
@@ -520,6 +586,10 @@ def parse_args(argv=None):
                         help="并发请求数（默认：1）")
     parser.add_argument("--retry-attempts", type=int, default=1,
                         help="单条请求的重试次数（默认：1）")
+    parser.add_argument("--cache-file", default=str(BASE_DIR / "eval_cache.jsonl"),
+                        help="断点续跑缓存文件路径（默认：./eval_cache.jsonl）")
+    parser.add_argument("--no-cache", action="store_true",
+                        help="不使用缓存，全部重新调用 API 评估")
     return parser.parse_args(argv)
 
 

@@ -17,14 +17,29 @@ input.json  ──►  ③ homework1_final.py：DataFlow-Agent + GLM 批量评�
      output_results_batch.json / all_summaries.txt / summary_report_batch.txt
 ```
 
+## 功能特性
+
+- **MinerU JSON 批量转换**：兼容 block/span、content_list 等多种 MinerU 导出结构，自动清洗脏字符、按内容指纹去重；
+- **大模型批量评估**：五维评分规则（满分 100），自动解析模型输出，质量判定与分数自洽性校验；
+- **失败自动重试**：缺结果或解析失败的条目自动重试，报告含失败原因统计；
+- **断点续跑缓存**：按文档内容指纹缓存评估结果，重跑只处理新增/变更文档，不重复消耗 API 额度；
+- **AI-Ready 语料导出**：一键把高质量文献导出为 JSONL（微调/RAG）与 Markdown；
+- **交互式 HTML 报告**：筛选、搜索、排序、图表统计，离线浏览器直接打开。
+
 ## 目录结构
 
 ```
 .
 ├── convert_mineru_jsons.py   # 步骤二：MinerU JSON → input.json
-├── homework1_final.py        # 步骤三：大模型批量评分/摘要 + 失败重试 + 报告导出
+├── homework1_final.py        # 步骤三：大模型批量评分/摘要 + 失败重试 + 断点续跑
+├── export_ai_ready.py        # 拓展：导出 AI-Ready 语料（JSONL / Markdown）
+├── generate_report.py        # 拓展：生成交互式 HTML 评估报告
 ├── input.json                # 待评估文档列表
 ├── mineru_outputs/           # MinerU 解析输出的 JSON 文件（15 篇文献）
+├── ai_ready_corpus/          # 导出的高质量语料
+│   ├── corpus.jsonl
+│   └── markdown/
+├── report.html               # 交互式评估报告
 ├── output_results_batch.json # 结构化评估结果
 ├── all_summaries.txt         # 全部文献摘要合集
 ├── summary_report_batch.txt  # 统计报告
@@ -58,6 +73,14 @@ python homework1_final.py
 
 # 可调参数：批大小、批间等待、失败重试轮数、模型等
 python homework1_final.py --batch-size 5 --sleep 5 --max-retries 2
+python homework1_final.py --no-cache   # 忽略缓存全部重评
+
+# 导出 AI-Ready 语料（默认仅导出 YES 文献）
+python export_ai_ready.py
+python export_ai_ready.py --include-partial --min-score 80
+
+# 生成交互式 HTML 报告（可选同时导出图表 PNG）
+python generate_report.py --charts-dir charts
 ```
 
 ## 评分规则（总分 100）
@@ -78,7 +101,7 @@ python homework1_final.py --batch-size 5 --sleep 5 --max-retries 2
 
 - 总文档数 **15**，解析成功率 **100%**
 - **YES 13 篇**、PARTIAL 1 篇、NO 1 篇
-- 平均分 **86.5**，全部摘要见 `all_summaries.txt`
+- 平均分 **84.3**（其中 YES 文献平均 **90.5**），全部摘要见 `all_summaries.txt`
 
 | 文献 | 判定 | 分数 |
 | --- | :-: | :-: |
@@ -104,7 +127,10 @@ python homework1_final.py --batch-size 5 --sleep 5 --max-retries 2
 
 - `output_results_batch.json`：结构化结果，含每篇的 `quality / score / reason / summary`；
 - `all_summaries.txt`：全部文献的摘要合集；
-- `summary_report_batch.txt`：总数、成功率、失败原因统计与样例预览。
+- `summary_report_batch.txt`：总数、成功率、失败原因统计与样例预览；
+- `ai_ready_corpus/corpus.jsonl`：高质量语料（JSONL，含正文、摘要、元信息），可直接用于微调或 RAG；
+- `ai_ready_corpus/markdown/`：高质量语料的 Markdown 版本；
+- `report.html`：交互式评估报告，浏览器直接打开。
 
 ## 作者
 
