@@ -11,8 +11,7 @@ homework1_final.py
     python homework1_final.py --input 其他.json --output 结果.json
 
 依赖：
-    - dataflow-agent（OpenDataLab DataFlow-Agent，pip 包名 dataflow-agent）
-      注意：不要 pip install dataflow，那是另一个同名无关的包。
+    - dataflow-agent（pip 安装：pip install dataflow-agent）
     - python-dotenv
     - .env 中配置 DF_API_KEY
 """
@@ -81,12 +80,7 @@ def build_batch_pipeline_class(model_name, api_url, max_workers, retry_attempts)
         from dataflow.serving import APILLMServing_request
         from dataflow.operators.core_text import PromptedGenerator
     except ImportError:
-        sys.exit(
-            "❌ 未找到 DataFlow-Agent 依赖。\n"
-            "   请执行: pip install dataflow-agent\n"
-            "   注意包名是 dataflow-agent（提供 import dataflow），\n"
-            "   不要安装 pypi 上同名的 dataflow，那是无关包。"
-        )
+        sys.exit("❌ 缺少依赖，请执行: pip install dataflow-agent")
 
     class BatchPipeline(PipelineABC):
         def __init__(self, input_file):
