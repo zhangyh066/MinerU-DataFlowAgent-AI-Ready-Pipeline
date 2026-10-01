@@ -1,47 +1,54 @@
 # 基于 MinerU 与 DataFlow-Agent 的 AI-Ready 数据自动化生产线
 
-一条「PDF 文献 → AI-Ready 结构化数据」的自动化处理流水线：用 MinerU 将金融类 PDF 解析为结构化 JSON，再由 DataFlow-Agent 驱动大模型（GLM-4.5-Air）对文献自动评分、分类并生成摘要，最终产出可直接用于下游 AI 应用的高质量语料。
+**项目周期：2026.03 — 2026.04　|　负责人：Yuhui Zhang**
 
-## 处理流程
+针对大模型训练中非结构化 PDF 清洗成本高的痛点，本项目主导搭建了「高精解析 + 智能调度」的端到端数据生产线：原始金融文献 PDF 经过解析、清洗、质量评估后，自动转化为带质量分级、可直接供微调 / RAG 使用的高质量数据集，并内置检索问答与效果评测能力，实现从原始文档到 AI-Ready 语料的全流程自动化。
+
+## 核心能力
+
+- **版面解析**：集成 MinerU 攻克双栏排版、跨页表格及密集公式的提取难题，精准剥离页眉页脚噪声，公式高保真转为 LaTeX 代码，表格无损还原为结构化文本；
+- **智能编排**：基于 DataFlow-Agent 串联解析结果装载、正则清洗、内容去重、LLM 批量评分与自动摘要等算子，数据在管道中自动流转，配合内容指纹缓存实现增量更新、断点续跑；
+- **质量管控**：引入 Prompt 驱动的质量评估智能体，基于大模型按五维规则动态评估文本质量，构建「通过（YES）/ 存疑（PARTIAL）/ 丢弃（NO）」动态路由，自动拦截练习题、目录、封面等低质数据，确保产出语料具备高信噪比；评估原始输出全量留存，质量判定与分数自洽性自动校验；
+- **工程化拓展**：一键流水线（`run_all.py`）串联全部环节；AI-Ready 语料一键导出（JSONL / Markdown / CSV）；交互式 HTML 评估报告（筛选、搜索、排序、图表）；RAG 检索问答子系统（BGE 语义向量 + BM25 混合检索 + 术语共现图谱扩展 + 带引用生成 + 命中率评测）。
+
+## 整体架构
 
 ```
 PDF 文献
-  │  ① MinerU 解析
+  │  ① MinerU 高精解析（双栏/表格/公式，输出结构化 JSON）
   ▼
 mineru_outputs/*.json
-  │  ② convert_mineru_jsons.py：清洗、抽取正文、去重
+  │  ② convert_mineru_jsons.py：正则清洗、正文抽取、内容指纹去重
   ▼
-input.json  ──►  ③ homework1_final.py：DataFlow-Agent + GLM 批量评分/摘要、失败重试
-                    │
-                    ▼
-     output_results_batch.json / all_summaries.txt / summary_report_batch.txt
+input.json
+  │  ③ homework1_final.py：DataFlow-Agent 编排 GLM 智能体
+  │     五维评分 → YES/PARTIAL/NO 动态路由 → 失败自动重试 → 断点续跑缓存
+  ▼
+output_results_batch.json ──► ④ export_ai_ready.py：导出 AI-Ready 语料
+  │                              （JSONL 微调/RAG · Markdown · CSV）
+  ▼
+ai_ready_corpus/corpus.jsonl
+  │  ⑤ rag_cli.py build：句子级切块 + BGE 向量化 + BM25 + 共现图
+  ▼
+data/rag_index/ ──► query / ask（混合检索 + 图谱扩展 + 带引用生成）
+                   ──► eval（自动体检 + 人工标注命中率评测）
 ```
-
-## 功能特性
-
-- **MinerU JSON 批量转换**：兼容 block/span、content_list 等多种 MinerU 导出结构，自动清洗脏字符、按内容指纹去重；
-- **大模型批量评估**：五维评分规则（满分 100），自动解析模型输出，质量判定与分数自洽性校验；
-- **失败自动重试**：缺结果或解析失败的条目自动重试，报告含失败原因统计；
-- **断点续跑缓存**：按文档内容指纹缓存评估结果，重跑只处理新增/变更文档，不重复消耗 API 额度；
-- **AI-Ready 语料导出**：一键把高质量文献导出为 JSONL（微调/RAG）、Markdown 与 CSV；
-- **交互式 HTML 报告**：筛选、搜索、排序、图表统计，离线浏览器直接打开；
-- **RAG 检索与问答**：BGE 语义向量 + BM25 混合检索（RRF 融合）+ 术语共现图谱扩展召回 + 可选 LLM 带引用生成 + 命中率评测，索引持久化、自动增量重建。
 
 ## 目录结构
 
 ```
 .
-├── convert_mineru_jsons.py   # 步骤二：MinerU JSON → input.json
-├── homework1_final.py        # 步骤三：大模型批量评分/摘要 + 失败重试 + 断点续跑
-├── export_ai_ready.py        # 拓展：导出 AI-Ready 语料（JSONL / Markdown / CSV）
-├── generate_report.py        # 拓展：生成交互式 HTML 评估报告（含关键词词频图）
+├── convert_mineru_jsons.py   # ② MinerU JSON → input.json（清洗 + 去重）
+├── homework1_final.py        # ③ LLM 批量评分/摘要 + 失败重试 + 断点续跑
+├── export_ai_ready.py        # ④ AI-Ready 语料导出（JSONL / Markdown / CSV）
+├── generate_report.py        # 交互式 HTML 评估报告（含关键词词频图）
 ├── rag_cli.py                # RAG 命令行：build / query / ask / eval
 ├── rag/                      # RAG 检索与问答子系统（包）
 ├── run_all.py                # 一键运行完整流水线
 ├── eval_questions.json       # 检索命中率人工标注评测集
 ├── input.json                # 待评估文档列表
-├── mineru_outputs/           # MinerU 解析输出的 JSON 文件（15 篇文献）
-├── ai_ready_corpus/          # 导出的高质量语料
+├── mineru_outputs/           # MinerU 解析输出（15 篇金融科技文献）
+├── ai_ready_corpus/          # AI-Ready 语料库
 │   ├── corpus.jsonl
 │   ├── corpus_eval.csv
 │   └── markdown/
@@ -63,60 +70,36 @@ pip install -r requirements.txt
 
 ## 配置
 
-在项目根目录创建 `.env` 文件，填入大模型 API 密钥（`.env` 已被 git 忽略，不会上传）：
+在项目根目录创建 `.env` 文件，填入大模型 API 密钥（`.env` 已被 git 忽略，敏感信息不会入库）：
 
 ```
 DF_API_KEY=你的密钥
 ```
 
-可选环境变量：`MODEL_NAME`（默认 `glm-4.5-air`）、`API_URL`。
+可选环境变量：`MODEL_NAME`（默认 `glm-4.5-air`）、`API_URL`、`RAG_LLM_PROVIDER`（设为 `deepseek` 时改用 `DEEPSEEK_API_KEY`）、`RAG_MODEL_DIR`（BGE 模型目录）。
 
 ## 使用
 
 ```bash
 # 一键运行完整流水线（新文献放入 mineru_outputs/ 后增量更新）
 python run_all.py
-python run_all.py --skip-eval   # 不调 API，基于已有结果重建导出与报告
+python run_all.py --skip-eval   # 不调 API，基于已有结果重建导出、索引与报告
 
 # 分步执行
-python convert_mineru_jsons.py                  # 生成/更新 input.json
-python homework1_final.py                       # 大模型批量评估
+python convert_mineru_jsons.py                  # ② 清洗转换
+python homework1_final.py                       # ③ LLM 批量评估
 python homework1_final.py --batch-size 5 --sleep 5 --max-retries 2
 python homework1_final.py --no-cache            # 忽略缓存全部重评
+python export_ai_ready.py --include-partial     # ④ 导出语料（可加 --min-score 80）
+python generate_report.py --charts-dir charts   # HTML 评估报告
 
-# 导出 AI-Ready 语料（默认仅导出 YES 文献）
-python export_ai_ready.py
-python export_ai_ready.py --include-partial --min-score 80
-python export_ai_ready.py --formats jsonl md csv
-
-# 生成交互式 HTML 报告（可选同时导出图表 PNG）
-python generate_report.py --charts-dir charts
-
-# RAG 检索与问答（先建索引；run_all.py 已自动包含该步骤）
+# RAG 检索与问答
 python rag_cli.py build                          # 从语料构建持久化检索索引
 python rag_cli.py query --query "金融科技对银行流动性创造的影响"
 python rag_cli.py ask --question "金融科技通过什么机制影响银行风险承担？"
 python rag_cli.py ask --question "..." --with-llm   # 真正调用大模型生成带引用回答
 python rag_cli.py eval --auto --questions eval_questions.json   # 检索命中率评测
 ```
-
-## RAG 检索与问答
-
-`rag/` 子系统负责知识库检索与生成，设计要点：
-
-- **切块**：按句子累加、小标题边界优先下刀、块间句子重叠；每块附带来源与章节，
-  并向量化成 contextual chunk（块前补「《文件名》+ 章节」），避免同类套话段落互相混淆；
-- **混合检索**：BGE 语义向量（本地模型，sentence-transformers 不可用时自动降级 TF-IDF）
-  与 BM25 词法检索两路召回，RRF（倒数排名融合）合并——向量抓语义、BM25 抓精确词；
-- **图谱扩展**：术语共现图（jieba 抽名词性术语，同块共现建边）做多跳扩展，
-  把「内容不像但逻辑相关」的块补召回，命中结果带来源标记（向量/词法/图谱）；
-- **生成**：检索结果按相关度组装成带 `[编号]` 引用的提示词，默认只打印提示词，
-  `--with-llm` 才真正调用大模型（默认 GLM，复用 `DF_API_KEY`；
-  设 `RAG_LLM_PROVIDER=deepseek` + `DEEPSEEK_API_KEY` 可切换）；
-- **评测**：自动体检（块内容反查自身，下限参考）+ 人工标注评测集（`eval_questions.json`）
-  计算 Top-K 命中率，报告含未命中题目分析，写入 `reports/retrieval_eval.md`；
-- **持久化**：索引存于 `data/rag_index/`（向量 + 块元数据 + 后端标识），
-  更换向量后端时自动检测并提示重建，避免两种向量空间混用。
 
 ## 评分规则（总分 100）
 
@@ -128,15 +111,16 @@ python rag_cli.py eval --auto --questions eval_questions.json   # 检索命中�
 | 噪声控制 | 0–15 | 无目录、无乱码、无封面、无教学题目 |
 | 学术贡献 | 0–15 | 有机制、有假说、有明确贡献 |
 
-判定标准：`score ≥ 80` → **YES**；`60–79` → **PARTIAL**；`< 60` → **NO**。
+判定标准：`score ≥ 80` → **YES**（进入语料库）；`60–79` → **PARTIAL**；`< 60` → **NO**（动态路由拦截）。输出时自动校验质量判定与分数的自洽性，不一致条目单独标记。
 
 ## 运行结果
 
 对 `mineru_outputs/` 中 15 篇文献（金融科技、银行行为、资产定价等方向）完成批量评估：
 
-- 总文档数 **15**，解析成功率 **100%**
+- 总文档数 **15**，评估解析成功率 **100%**
 - **YES 13 篇**、PARTIAL 1 篇、NO 1 篇
-- 平均分 **84.3**（其中 YES 文献平均 **90.5**），全部摘要见 `all_summaries.txt`
+- 平均分 **84.3**（其中 YES 文献平均 **90.5**）
+- RAG 混合检索人工标注评测 **Top-3 命中率 87.5%**（评测报告见 `reports/retrieval_eval.md`）
 
 | 文献 | 判定 | 分数 |
 | --- | :-: | :-: |
@@ -156,20 +140,27 @@ python rag_cli.py eval --auto --questions eval_questions.json   # 检索命中�
 | Commonwealth Bank of Australia 股权研究报告（CFA Research Challenge） | PARTIAL | 66 |
 | CFA 一级组合管理考前练习题 | NO | 23 |
 
-评估效果符合预期：正式学术论文全部识别为 YES；行业研究报告因缺少计量方法识别为 PARTIAL；考试练习题被正确判为 NO 并过滤，验证了流水线的质量甄别能力。
+评估效果符合预期：正式学术论文全部识别为 YES；行业研究报告因缺少计量方法识别为 PARTIAL；考试练习题被正确判为 NO 并路由拦截，验证了质量管控机制的有效性。
+
+## RAG 检索与问答设计要点
+
+- **切块**：按句子累加、小标题边界优先下刀、块间句子重叠；每块向量化为 contextual chunk（块前补《文件名》+ 章节），避免同类套话段落互相混淆；
+- **混合检索**：BGE 语义向量（本地模型，sentence-transformers 不可用时自动降级 TF-IDF）与 BM25 词法检索两路召回，RRF 倒数排名融合；术语共现图（jieba 名词性术语 + 稀有度加权）作为第三路信号参与融合，把「内容不像但逻辑相关」的块补召回，命中结果带来源标记（向量/词法/图谱）；
+- **生成**：检索结果按相关度组装成带 `[编号]` 引用的提示词，默认只打印提示词，`--with-llm` 才真正调用大模型（默认 GLM，可切 DeepSeek）；附「资料间关联」子图作为多跳上下文；
+- **评测**：自动体检（块内容反查自身的下限参考）+ 人工标注评测集（`eval_questions.json`）计算 Top-K 命中率，报告含未命中题目分析；
+- **持久化**：索引存于 `data/rag_index/`（向量 + 块元数据 + 后端标识），更换向量后端时自动检测并拒绝混用。
 
 ## 输出文件
 
-- `output_results_batch.json`：结构化结果，含每篇的 `quality / score / reason / summary`；
-- `all_summaries.txt`：全部文献的摘要合集；
-- `summary_report_batch.txt`：总数、成功率、失败原因统计与样例预览；
-- `ai_ready_corpus/corpus.jsonl`：高质量语料（JSONL，含正文、摘要、元信息），可直接用于微调或 RAG；
+- `output_results_batch.json`：结构化评估结果，含每篇的 `quality / score / reason / summary`；
+- `ai_ready_corpus/corpus.jsonl`：高质量语料（正文、摘要、质量元信息），可直接用于微调或 RAG；
 - `ai_ready_corpus/corpus_eval.csv`：评估结果表（Excel 可直接打开）；
 - `ai_ready_corpus/markdown/`：高质量语料的 Markdown 版本；
 - `report.html`：交互式评估报告，浏览器直接打开；
-- `charts/`：报告中的统计图表 PNG（质量占比、评分分布、高频关键词）；
+- `charts/`：质量占比、评分分布、高频关键词图表 PNG；
 - `data/rag_index/`：RAG 检索索引（`rag_cli.py build` 生成，`query/ask` 自动加载）；
-- `reports/retrieval_eval.md`：检索命中率评测报告。
+- `reports/retrieval_eval.md`：检索命中率评测报告；
+- `all_summaries.txt` / `summary_report_batch.txt`：摘要合集与统计报告。
 
 ## 作者
 
