@@ -1,0 +1,15 @@
+# 敏感信息：API 密钥等，切勿上传
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# IDE / 系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,752 @@
+[
+    {
+        "type": "text",
+        "text": "《CFA 一级组合管理与其他类投资》考前练习题",
+        "text_level": 1,
+        "bbox": [
+            189,
+            85,
+            825,
+            112
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "1.A portfolio manager creates the following portfolio: ",
+        "bbox": [
+            147,
+            147,
+            532,
+            164
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "table",
+        "img_path": "images/41798b1eac1eddd1c88310957611b81dee88c29d1e3413f1eb15ff3bd2f59ff3.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=1 colspan=1>Security</td><td rowspan=1 colspan=1>Security Weight (%)</td><td rowspan=1 colspan=1>Expected Standard Deviation (%)</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>30</td><td rowspan=1 colspan=1>20</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>70</td><td rowspan=1 colspan=1>12</td></tr></table>",
+        "bbox": [
+            144,
+            168,
+            737,
+            273
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "If the covariance of returns between the two securities is $- 0 . 0 2 4 0$ , the expected standard deviation of the portfolio is closest to: ",
+        "bbox": [
+            142,
+            274,
+            847,
+            310
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A) $2 . 4 \\%$ .   \n$\\mathrm { B } ) 7 . 5 \\%$ .   \n$C ) 9 . 2 \\%$ . ",
+        "bbox": [
+            147,
+            316,
+            213,
+            374
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "2.A portfolio manager creates the following portfolio: ",
+        "bbox": [
+            147,
+            403,
+            532,
+            417
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "table",
+        "img_path": "images/0350cace010c747231c82d772533f646ddae8bbd21484e0f6489d5335b4feb76.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=1 colspan=1>Security</td><td rowspan=1 colspan=1> Security Weight (%)</td><td rowspan=1 colspan=1>Expected Standard Deviation (%)</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>30</td><td rowspan=1 colspan=1>20</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>70</td><td rowspan=1 colspan=1>12</td></tr></table>",
+        "bbox": [
+            144,
+            423,
+            739,
+            527
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "If the standard deviation of the portfolio is $1 4 . 4 0 \\%$ , the correlation between the two securities is equal to: ",
+        "bbox": [
+            146,
+            527,
+            831,
+            564
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A)-1.0.   \nB)0.0.   \nC)1.0. ",
+        "bbox": [
+            147,
+            570,
+            200,
+            629
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "3.With respect to capital market theory, an investor’s optimal portfolio is the combination of a risk-free asset and a risky asset with the highest: ",
+        "bbox": [
+            146,
+            657,
+            831,
+            696
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A)expected return.   \nB)indifference curve.   \nC)capital allocation line slope. ",
+        "bbox": [
+            147,
+            702,
+            368,
+            762
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "4.With respect to risk-averse investors, a risk-free asset will generate a numerical utility that is: ",
+        "bbox": [
+            142,
+            788,
+            825,
+            804
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "A)the same for all individuals.   \nB)positive for risk-averse investors.   \nC)equal to zero for risk seeking investors. ",
+        "bbox": [
+            147,
+            810,
+            447,
+            869
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "text",
+        "text": "5.A portfolio manager creates the following portfolio: ",
+        "bbox": [
+            147,
+            896,
+            532,
+            913
+        ],
+        "page_idx": 0
+    },
+    {
+        "type": "table",
+        "img_path": "images/fb83a7aa34e801bd8a8379b16b37943c44cab9b503bd648f10d562fd53f1e0e2.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=1 colspan=1>Security</td><td rowspan=1 colspan=1>Security Weight (%)</td><td rowspan=1 colspan=1>Security Security Weight (%)| Expected Standard Deviation (%)</td></tr><tr><td rowspan=1 colspan=1>1</td><td rowspan=1 colspan=1>30</td><td rowspan=1 colspan=1>20</td></tr><tr><td rowspan=1 colspan=1>2</td><td rowspan=1 colspan=1>70</td><td rowspan=1 colspan=1>12</td></tr></table>",
+        "bbox": [
+            144,
+            83,
+            737,
+            173
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "If the correlation of returns between the two securities is 0.40, the expected standard deviation of the portfolio is closest to: ",
+        "bbox": [
+            146,
+            174,
+            833,
+            209
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A) $1 0 . 7 \\%$ .   \nB) $1 1 . 3 \\%$ .   \n$\\mathrm { C } ) 1 2 . 1 \\%$ . ",
+        "bbox": [
+            147,
+            216,
+            220,
+            274
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "6.Which of the following best describes the underlying rationale for a written investment policy statement (IPS)? ",
+        "bbox": [
+            146,
+            302,
+            833,
+            338
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A)A written IPS communicates a plan for trying to achieve investment success. B)A written IPS provides investment managers with a ready defense against client lawsuits. C)A written IPS allows investment managers to instruct clients about the proper use and purpose of investments. ",
+        "bbox": [
+            147,
+            344,
+            835,
+            425
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "7.Relative to portfolios on the CML, any portfolio that plots above the CML is considered: ",
+        "bbox": [
+            146,
+            453,
+            791,
+            469
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A)inferior.   \nB)inefficient.   \nC)unachievable. ",
+        "bbox": [
+            147,
+            475,
+            267,
+            533
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "8.Which of the following pooled investments is most likely characterized by a few large investments? ",
+        "bbox": [
+            147,
+            560,
+            776,
+            596
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A)Hedge funds.   \nB)Buyout funds.   \nC)Venture capital funds. ",
+        "bbox": [
+            147,
+            599,
+            322,
+            663
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "9.Returns on asset classes are best described as being a function of: ",
+        "bbox": [
+            146,
+            689,
+            628,
+            706
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A)the failure of arbitrage.   \nB)exposure to the idiosyncratic risks of those asset classes.   \nC)exposure to sets of systematic factors relevant to those asset classes. ",
+        "bbox": [
+            147,
+            712,
+            650,
+            770
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "10.Which of the following pairs of risks are most closely related? ",
+        "bbox": [
+            147,
+            797,
+            616,
+            814
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "A)Model risk and tail risk B)Liquidity risk and operational risk C)Credit risk and solvency risk ",
+        "bbox": [
+            147,
+            819,
+            411,
+            878
+        ],
+        "page_idx": 1
+    },
+    {
+        "type": "text",
+        "text": "11.Exchange-traded funds (ETFs): A)are priced once a trading day. B)usually pay out dividends to shareholders. C)are generally structured as closed-end funds. ",
+        "bbox": [
+            147,
+            84,
+            484,
+            165
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "12.The capital market line most likely consists of portfolios that: ",
+        "bbox": [
+            147,
+            192,
+            608,
+            208
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A)are fully diversified.   \nB)have zero systematic risk.   \nC)have nonsystematic risk equal to beta. ",
+        "bbox": [
+            147,
+            214,
+            438,
+            273
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "13.Risk governance: ",
+        "bbox": [
+            151,
+            300,
+            297,
+            315
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A)aligns risk management activities with the goals of the overall enterprise.   \nB)defines the qualitative assessment and evaluation of potential sources of risk in an organization.   \nC)delegates responsibility for risk management to all levels of the organization’s hierarchy. ",
+        "bbox": [
+            147,
+            322,
+            843,
+            380
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "14.The top level of a risk management system most likely is: ",
+        "bbox": [
+            149,
+            407,
+            581,
+            423
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A)risk governance.   \nB)strategic analysis or integration.   \nC)defined policies or procedures. ",
+        "bbox": [
+            147,
+            430,
+            394,
+            488
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "15. Diversification benefits from adding hedge funds to an equity portfolio may be limited because: ",
+        "bbox": [
+            147,
+            516,
+            794,
+            551
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A)correlations tend to increase during periods of financial crisis.   \nB)hedge fund returns are less than perfectly correlated with global equities.   \nC)hedge funds tend to perform better when global equity prices are declining. ",
+        "bbox": [
+            146,
+            558,
+            700,
+            618
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "16.An analyst gathers the following information about three stocks: ",
+        "bbox": [
+            147,
+            644,
+            628,
+            659
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "table",
+        "img_path": "images/ab486171a22bbceba21be7bc1d5a9df6e235851d7622d3b3c3ea4b18566fcaa6.jpg",
+        "table_caption": [],
+        "table_footnote": [],
+        "table_body": "<table><tr><td rowspan=1 colspan=1></td><td rowspan=1 colspan=1>Beta</td><td rowspan=1 colspan=1>Standard Deviation of Returns</td></tr><tr><td rowspan=1 colspan=1>Stock 1</td><td rowspan=1 colspan=1>0.9</td><td rowspan=1 colspan=1>17%</td></tr><tr><td rowspan=1 colspan=1>Stock 2</td><td rowspan=1 colspan=1>1.1</td><td rowspan=1 colspan=1>18%</td></tr><tr><td rowspan=1 colspan=1>Stock 3</td><td rowspan=1 colspan=1>1.2</td><td rowspan=1 colspan=1>16%</td></tr></table>",
+        "bbox": [
+            147,
+            665,
+            600,
+            776
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "If the standard deviation of market returns is equal to $1 0 \\%$ , the stock with the highest non systematic risk is: ",
+        "bbox": [
+            147,
+            777,
+            778,
+            813
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "A)Stock 1.   \nB)Stock 2.   \nC)Stock 3. ",
+        "bbox": [
+            147,
+            820,
+            228,
+            878
+        ],
+        "page_idx": 2
+    },
+    {
+        "type": "text",
+        "text": "17. Which of the following forms of digital asset investment most likely involves the use of a cryptocurrency wallet? ",
+        "bbox": [
+            146,
+            84,
+            811,
+            121
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "A)Direct investment B)Indirect investment via ETFs C)Indirect investment via coin trusts ",
+        "bbox": [
+            147,
+            128,
+            415,
+            187
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "18. The correlation of cryptocurrencies with traditional assets has been: ",
+        "bbox": [
+            147,
+            214,
+            657,
+            229
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "A)decreasing.   \nB)steady.   \nC)increasing. 19. In a secondary sale, a private capital firm sells one of its portfolio companies to: A)the public.   \nB)a competitor in its industry.   \nC)another private capital fund. ",
+        "bbox": [
+            147,
+            236,
+            250,
+            294
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            147,
+            322,
+            746,
+            403
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "20. Ash Lawn Partners, a fund of hedge funds, has the following fee structure: ",
+        "bbox": [
+            149,
+            429,
+            704,
+            445
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "2/20 underlying fund fees with incentive fees calculated independently   \nAsh Lawn fees are calculated net of all underlying fund fees   \n$1 \\%$ management fee (based on year-end market value)   \n$10 \\%$ incentive fee calculated net of management fee   \nThe fund and all underlying funds have no hurdle rate or high-water mark fee conditions   \nQ. In the latest year, Ash Lawn’s fund value increased from $\\$ 100$ million to $\\$ 133$ million before   \ndeduction of management and incentive fees of the fund or underlying funds. Based on the   \ninformation provided, the total fee earned by all funds in the aggregate is closest to: A)\\$11.85 million.   \nB)\\$12.75 million.   \nC)\\$12.87 million. 21. The management fee of a private equity fund that has not yet invested all of its committed capital is most likely based on:   \nA)committed capital.   \nB)remaining capital.   \nC)invested capital. ",
+        "bbox": [
+            147,
+            450,
+            831,
+            618
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            147,
+            623,
+            280,
+            682
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            144,
+            708,
+            816,
+            812
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "22. An investor is seeking an investment that can take long and short positions, may use multi-strategies, and historically exhibits low correlation with a traditional investment portfolio. The investor’s goals will be best satisfied with an investment in: ",
+        "bbox": [
+            147,
+            838,
+            830,
+            897
+        ],
+        "page_idx": 3
+    },
+    {
+        "type": "text",
+        "text": "A)real estate.   \nB)a hedge fund.   \nC)a private equity fund. ",
+        "bbox": [
+            147,
+            85,
+            321,
+            145
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "23. Infrastructure investments can be categorized based on the nature of their underlying assets as: ",
+        "bbox": [
+            144,
+            171,
+            843,
+            186
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "A)economic or social.   \nB)local, regional, or national.   \nC)usage-based or take-or-pay. ",
+        "bbox": [
+            147,
+            192,
+            364,
+            252
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "24. Which of the following characteristics of a target company is likely the least attractive for a leveraged buyout? ",
+        "bbox": [
+            146,
+            278,
+            828,
+            315
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "A)Substantial amount of physical assets.   \nB)Strong and sustainable cash flow.   \nC)High leverage. ",
+        "bbox": [
+            147,
+            321,
+            438,
+            380
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "25.A private equity limited partner would least likely experience which of the following? ",
+        "bbox": [
+            144,
+            407,
+            781,
+            423
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "A)Capital calls in the partnership’s early years to fund investments.   \nB)A management fee based on committed capital, not invested capital.   \nC)Short time lags between investments in and exits from portfolio companies. ",
+        "bbox": [
+            147,
+            429,
+            700,
+            488
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "26. Based on the historical record, adding alternative investments to a traditional investment portfolio consisting of publicly traded debt and equity will most likely decrease the portfolio’s: ",
+        "bbox": [
+            146,
+            516,
+            818,
+            552
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "A)liquidity.   \nB)downside risk.   \nC)risk-adjusted return. ",
+        "bbox": [
+            147,
+            558,
+            312,
+            617
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "27. A leveraged loan is best defined as a loan: ",
+        "bbox": [
+            149,
+            644,
+            473,
+            659
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "A)that is itself levered.   \nB)to mature companies in financial difficulty.   \nC)that comes with warrants or conversion rights. 28. Compared with managers of traditional investments, managers of alternative investments are likely to have fewer restrictions on:   \nA)holding cash.   \nB)buying stocks.   \nC)using derivatives. ",
+        "bbox": [
+            147,
+            667,
+            495,
+            725
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            142,
+            751,
+            835,
+            856
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "29. A hedge fund has a return of $30 \\%$ before fees in its first year. The fund has a management fee of $1 . 5 \\%$ on end-of-year fund value and a $1 5 \\%$ incentive fee, with an $8 \\%$ hard hurdle rate on gains net of the management fee. The return after fees for an investor in this fund is closest to: ",
+        "bbox": [
+            142,
+            881,
+            835,
+            897
+        ],
+        "page_idx": 4
+    },
+    {
+        "type": "text",
+        "text": "",
+        "bbox": [
+            147,
+            83,
+            842,
+            122
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "A) $2 0 . 5 \\%$ . $1 3 ) 2 1 . 5 \\%$ . $C ) 2 5 . 0 \\%$ ",
+        "bbox": [
+            147,
+            128,
+            220,
+            186
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "30. Greenfield investments in infrastructure are most accurately described as investments in assets: ",
+        "bbox": [
+            144,
+            214,
+            800,
+            248
+        ],
+        "page_idx": 5
+    },
+    {
+        "type": "text",
+        "text": "A)that are operating profitably.   \nB)that have not yet been constructed.   \nC)related to environmental technology. ",
+        "bbox": [
+            147,
+            256,
+            428,
+            316
+        ],
+        "page_idx": 5
+    }
+]

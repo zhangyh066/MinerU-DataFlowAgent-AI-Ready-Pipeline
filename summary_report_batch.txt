@@ -1,0 +1,43 @@
+============================================================
+【AI-Ready 数据生产线结果报告】
+============================================================
+总文档数：15
+成功解析 result 的文档数：15
+没有 result 的文档数：0
+result 解析失败的文档数：0
+QUALITY=YES 的文档数：13
+QUALITY=PARTIAL 的文档数：1
+QUALITY=NO 的文档数：1
+解析成功率：100.0%
+
+【样例预览】
+------------------------------------------------------------
+文件名：8791c0f2-4031-41d9-aeda-0b0ded7ab9ea_content_list.json
+质量：NO
+评分：23
+理由：这是一份CFA一级考试的练习题，属于教学题目，没有研究方法、学术贡献或可复用的研究信息。
+摘要：该文本是CFA一级组合管理与其他类投资考试的练习题，包含30道选择题，涵盖投资组合理论、资产定价、资本市场线、对冲基金、私募股权、基础设施投资等金融知识。作为考试练习材料，它缺乏研究方法、学术贡献和可复用的研究信息，主要目的是测试考生对金融基础知识的掌握程度。
+------------------------------------------------------------
+文件名：layout.json
+质量：PARTIAL
+评分：66
+理由：Well-structured equity research report with financial analysis and valuation, but lacks formal econometric methods and broader academic contribution.
+摘要：This is a comprehensive equity research report on Commonwealth Bank of Australia (CBA) prepared for the CFA Institute Research Challenge. The report p...
+------------------------------------------------------------
+文件名：MinerU_json_Investing in misallocation.pdf_f7f3ee83-55c4-42c6-8bdf-a9388120cfed.json
+质量：YES
+评分：89
+理由：High-quality academic research with rigorous methods, significant contributions to understanding misallocation, and strong financial relevance.
+摘要：This paper challenges conventional views on capital misallocation by showing that firms with high investment rates despite low marginal product of cap...
+------------------------------------------------------------
+文件名：MinerU_json_The Journal of Finance - 2025 - COOKSON - Can Social Media Inform Corporate Decisions  Evidence from Merger Withdrawals.pdf_f29548f7-9261-41be-8bfe-0773f6bffb9c.json
+质量：YES
+评分：88
+理由：Rigorous empirical analysis of social media sentiment effects on corporate merger decisions with clear methodology, detailed variable construction, robust results, and meaningful contributions to finance literature.
+摘要：This paper examines whether social media sentiment predicts merger withdrawals using data from StockTwits and Twitter. The authors find that negative ...
+------------------------------------------------------------
+文件名：MinerU_json_中国商业银行超额准备金持有的驱动机制研究.pdf_751b5b2e-4d0d-4443-949d-e149640391a2.json
+质量：YES
+评分：93
+理由：该论文构建了严谨的理论模型，采用多种实证方法识别中国商业银行超额准备金持有的驱动机制，提供了详细的数据和方法信息，研究主题高度相关金融领域，且具有明确的学术贡献和政策启示。
+摘要：本文研究了中国商业银行超额准备金持有的驱动机制，构建了具有微观基础的理论模型，并利用2010-2024年42家A股上市银行的面板数据进行了实证分析。研究发现：活期存款显著驱动超额准备金持有（活期存款每增长1%将驱动超额准备金增长0.55%-0.60%）；银行资产配置策略具有显著的跨期效应；央行公告通...
