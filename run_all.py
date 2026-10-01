@@ -61,7 +61,7 @@ def main(argv=None):
     args = parse_args(argv)
     py = sys.executable
 
-    run_step("1/4 转换 MinerU JSON", [py, "convert_mineru_jsons.py"])
+    run_step("1/5 转换 MinerU JSON", [py, "convert_mineru_jsons.py"])
 
     if not args.skip_eval:
         eval_cmd = [py, "homework1_final.py"]
@@ -73,7 +73,7 @@ def main(argv=None):
             eval_cmd += ["--max-retries", str(args.max_retries)]
         if args.no_cache:
             eval_cmd.append("--no-cache")
-        run_step("2/4 大模型批量评估", eval_cmd)
+        run_step("2/5 大模型批量评估", eval_cmd)
     else:
         print("\n已跳过评估步骤（--skip-eval）")
 
@@ -82,16 +82,19 @@ def main(argv=None):
         export_cmd.append("--include-partial")
     if args.min_score is not None:
         export_cmd += ["--min-score", str(args.min_score)]
-    run_step("3/4 导出 AI-Ready 语料", export_cmd)
+    run_step("3/5 导出 AI-Ready 语料", export_cmd)
+
+    run_step("4/5 构建 RAG 检索索引", [py, "rag_cli.py", "build"])
 
     report_cmd = [py, "generate_report.py"]
     if args.charts_dir:
         report_cmd += ["--charts-dir", args.charts_dir]
-    run_step("4/4 生成 HTML 报告", report_cmd)
+    run_step("5/5 生成 HTML 报告", report_cmd)
 
     print("\n全部完成")
     print("  - 评估结果：output_results_batch.json")
     print("  - 语料库：  ai_ready_corpus/")
+    print("  - 检索索引：data/rag_index/（rag_cli.py query/ask 使用）")
     print("  - 报告：    report.html")
 
 

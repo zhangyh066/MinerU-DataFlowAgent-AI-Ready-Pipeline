@@ -4,6 +4,9 @@
 # 运行时缓存（断点续跑，可随时重建）
 eval_cache.jsonl
 
+# RAG 检索索引（rag_cli.py build 可随时重建）
+data/
+
 # Python
 __pycache__/
 *.pyc

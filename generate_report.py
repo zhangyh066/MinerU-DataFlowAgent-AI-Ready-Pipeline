@@ -120,7 +120,7 @@ def make_charts(stats, charts_dir=None):
 
 
 def add_keywords_chart(images, docs, charts_dir=None):
-    """语料关键词条形图（复用 search_papers 的 TF-IDF 分词）。"""
+    """语料关键词条形图（复用 rag.text 的 jieba TF-IDF 抽取）。"""
     if not docs:
         return
     try:
@@ -132,7 +132,7 @@ def add_keywords_chart(images, docs, charts_dir=None):
     except ImportError:
         return
 
-    from search_papers import top_keywords
+    from rag.text import top_keywords
     pairs = top_keywords(docs)
     if not pairs:
         return

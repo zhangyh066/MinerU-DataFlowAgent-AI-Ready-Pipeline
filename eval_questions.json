@@ -1,0 +1,42 @@
+[
+  {
+    "question": "金融科技对商业银行流动性创造是抑制还是促进？",
+    "expect_source": "金融科技与商业银行流动性创造",
+    "expect_keywords": ["流动性创造", "金融科技"]
+  },
+  {
+    "question": "监管沙盒试点对实体企业创新有什么影响？",
+    "expect_source": "金融科技监管与实体企业创新",
+    "expect_keywords": ["监管沙盒", "创新"]
+  },
+  {
+    "question": "超额准备金持有主要受什么因素驱动？",
+    "expect_source": "中国商业银行超额准备金持有的驱动机制研究",
+    "expect_keywords": ["活期存款", "超额准备金"]
+  },
+  {
+    "question": "社交媒体情绪能否预测企业并购撤回？",
+    "expect_source": "COOKSON",
+    "expect_keywords": ["StockTwits", "merger"]
+  },
+  {
+    "question": "互联网理财如何改变传统银行的负债结构？",
+    "expect_source": "金融科技对传统银行行为的影响",
+    "expect_keywords": ["同业", "负债"]
+  },
+  {
+    "question": "算法交易对市场稳定性和信息效率分别有什么影响？",
+    "expect_source": "算法交易的市场影响",
+    "expect_keywords": ["算法交易", "信息效率"]
+  },
+  {
+    "question": "银行并购模式如何影响企业创新？",
+    "expect_source": "并购模式与企业创新",
+    "expect_keywords": ["并购", "创新"]
+  },
+  {
+    "question": "中国市场化利率调控体系改革的方向是什么？",
+    "expect_source": "中国市场化利率调控体系改革思考",
+    "expect_keywords": ["利率", "调控"]
+  }
+]

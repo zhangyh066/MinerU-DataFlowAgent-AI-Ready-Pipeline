@@ -1,2 +1,9 @@
 dataflow-agent
+
 python-dotenv>=1.0
+
+# RAG 检索子系统
+numpy
+jieba
+# 可选：BGE 语义向量（不装则自动降级 TF-IDF）
+# sentence-transformers
