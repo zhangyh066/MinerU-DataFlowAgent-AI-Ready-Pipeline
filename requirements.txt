@@ -1,0 +1,5 @@
+# OpenDataLab DataFlow-Agent（pip 包名 dataflow-agent，提供 import dataflow）
+# ⚠️ 不要安装 pypi 上同名的 dataflow，那是无关包
+dataflow-agent
+
+python-dotenv>=1.0

@@ -1,16 +1,26 @@
+"""
+convert_mineru_jsons.py
+
+将 mineru_outputs/ 目录下 MinerU 解析输出的 JSON 文件批量转换为
+DataFlow-Agent 所需的 input.json（[{"file_name": ..., "text": ...}, ...]）。
+
+用法：
+    python convert_mineru_jsons.py
+    python convert_mineru_jsons.py --input-dir mineru_outputs --output input.json
+"""
+
+import argparse
+import hashlib
 import json
 import re
 import unicodedata
 from pathlib import Path
 
 
-# ===== 1) 路径配置 =====
 BASE_DIR = Path(__file__).resolve().parent
-INPUT_DIR = BASE_DIR / "mineru_outputs"
-OUTPUT_FILE = BASE_DIR / "input.json"
 
 
-# ===== 2) 文本清洗函数 =====
+# ===== 1) 文本清洗函数 =====
 def clean_text(text: str) -> str:
     """
     清理 MinerU 导出文本中的常见脏字符与异常 Unicode。
@@ -50,7 +60,13 @@ def clean_text(text: str) -> str:
     return text.strip()
 
 
-# ===== 3) 提取 block/line/span 风格文本 =====
+def content_fingerprint(text: str) -> str:
+    """生成归一化文本的指纹，用于检测内容完全重复的文档。"""
+    normalized = re.sub(r"\s+", "", text)
+    return hashlib.md5(normalized.encode("utf-8")).hexdigest()
+
+
+# ===== 2) 提取 block/line/span 风格文本 =====
 def extract_from_blocks(blocks, texts):
     if not isinstance(blocks, list):
         return
@@ -59,12 +75,13 @@ def extract_from_blocks(blocks, texts):
         if not isinstance(block, dict):
             continue
 
-        # 顶层 content
+        # 顶层 content（若 block 自带 content，通常已包含其下所有 span 文本）
         block_content = block.get("content", "")
         if isinstance(block_content, str) and block_content.strip():
             cleaned = clean_text(block_content)
             if cleaned:
                 texts.append(cleaned)
+                continue  # 有 content 时不再重复拼接 lines/spans
 
         # lines -> spans -> content
         lines = block.get("lines", [])
@@ -94,7 +111,7 @@ def extract_from_blocks(blocks, texts):
                         texts.append(line_text)
 
 
-# ===== 4) 提取 content_list / list 风格文本 =====
+# ===== 3) 提取 content_list / list 风格文本 =====
 def extract_from_content_list(items, texts):
     if not isinstance(items, list):
         return
@@ -134,7 +151,7 @@ def extract_from_content_list(items, texts):
                 texts.append(cleaned)
 
 
-# ===== 5) 从单个 JSON 提取正文 =====
+# ===== 4) 从单个 JSON 提取正文 =====
 def extract_text_from_mineru_json(file_path: Path) -> str:
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
@@ -160,7 +177,7 @@ def extract_text_from_mineru_json(file_path: Path) -> str:
         content_list = data.get("content_list", [])
         extract_from_content_list(content_list, texts)
 
-    # 情况 B：最外层直接是 list（你这个新文件就是这种）
+    # 情况 B：最外层直接是 list（content_list 风格导出文件）
     elif isinstance(data, list):
         extract_from_content_list(data, texts)
 
@@ -170,24 +187,58 @@ def extract_text_from_mineru_json(file_path: Path) -> str:
     return full_text
 
 
-# ===== 6) 主程序：批量转换 =====
-def main():
-    if not INPUT_DIR.exists():
-        raise FileNotFoundError(f"找不到文件夹：{INPUT_DIR}")
+# ===== 5) 主程序：批量转换 =====
+def parse_args():
+    parser = argparse.ArgumentParser(
+        description="将 MinerU 输出的 JSON 批量转换为 input.json"
+    )
+    parser.add_argument(
+        "--input-dir", default=str(BASE_DIR / "mineru_outputs"),
+        help="MinerU JSON 文件所在目录（默认：./mineru_outputs）",
+    )
+    parser.add_argument(
+        "--output", default=str(BASE_DIR / "input.json"),
+        help="输出文件路径（默认：./input.json）",
+    )
+    parser.add_argument(
+        "--pattern", default="*.json",
+        help="文件名匹配模式（默认：*.json）",
+    )
+    return parser.parse_args()
 
-    json_files = sorted(INPUT_DIR.glob("*.json"))
+
+def main():
+    args = parse_args()
+    input_dir = Path(args.input_dir)
+    output_file = Path(args.output)
+
+    if not input_dir.exists():
+        raise FileNotFoundError(f"找不到文件夹：{input_dir}")
+
+    json_files = sorted(input_dir.glob(args.pattern))
     if not json_files:
-        raise FileNotFoundError(f"在 {INPUT_DIR} 中没有找到任何 .json 文件")
+        raise FileNotFoundError(f"在 {input_dir} 中没有找到匹配 {args.pattern} 的文件")
 
     output_data = []
+    seen_hashes = {}
+    skipped_empty = []
+    skipped_dupes = []
 
     for json_file in json_files:
         try:
             text = extract_text_from_mineru_json(json_file)
 
             if not text:
+                skipped_empty.append(json_file.name)
                 print(f"[跳过] {json_file.name} 提取结果为空")
                 continue
+
+            fp = content_fingerprint(text)
+            if fp in seen_hashes:
+                skipped_dupes.append((json_file.name, seen_hashes[fp]))
+                print(f"[跳过] {json_file.name} 与 {seen_hashes[fp]} 内容重复")
+                continue
+            seen_hashes[fp] = json_file.name
 
             output_data.append({
                 "file_name": json_file.name,
@@ -199,11 +250,16 @@ def main():
         except Exception as e:
             print(f"[报错] {json_file.name}: {e}")
 
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+    with open(output_file, "w", encoding="utf-8") as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
 
-    print(f"\n全部完成，共写入 {len(output_data)} 条数据")
-    print(f"输出文件：{OUTPUT_FILE}")
+    print(f"\n全部完成：共扫描 {len(json_files)} 个文件")
+    print(f"  成功写入：{len(output_data)} 条")
+    if skipped_empty:
+        print(f"  空文本跳过：{len(skipped_empty)} 条")
+    if skipped_dupes:
+        print(f"  重复内容跳过：{len(skipped_dupes)} 条")
+    print(f"输出文件：{output_file}")
 
 
 if __name__ == "__main__":
