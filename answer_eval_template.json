@@ -1,0 +1,16 @@
+{
+  "description": "答案评审模板：先填入模型实际 answer 和 sources，再人工填写三个评审字段；null 表示未评审。",
+  "items": [
+    {
+      "question": "金融科技对商业银行流动性创造是抑制还是促进？",
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    }
+  ]
+}

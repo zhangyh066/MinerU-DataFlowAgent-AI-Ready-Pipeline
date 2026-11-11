@@ -1,4 +1,4 @@
-"""rag_cli 子命令实现：build / query / ask / eval。"""
+"""rag_cli 子命令实现：build / query / ask / eval / answer-eval。"""
 
 import json
 import logging
@@ -7,7 +7,8 @@ from pathlib import Path
 
 from .chunking import best_excerpt
 from .config import RAGConfig, BASE_DIR
-from .evaluate import auto_eval, labeled_eval, write_report
+from .answer_eval import write_answer_report
+from .evaluate import ablation_eval, auto_eval, labeled_eval, write_report
 from .qa import QAPipeline
 from .retrieval import HybridRetriever
 from .store import ChunkIndex
@@ -103,13 +104,24 @@ def cmd_eval(args):
     backend = retriever.index.embedder.name
 
     auto = labeled = None
+    ablation = None
     if args.auto:
         print("运行自动评测（下限体检）…")
         auto = auto_eval(retriever, sample=args.sample,
                          use_graph=config.graph_enabled)
         print(f"  Top-{auto.k} 命中 {auto.top_k}/{auto.n}")
 
-    if args.questions:
+    if args.ablation:
+        if not args.questions:
+            print("--ablation 需要同时指定 --questions <评测集 json>")
+            return 1
+        print(f"在同一评测集上运行四种检索方案：{args.questions}")
+        ablation = ablation_eval(args.questions, retriever, top_k=args.top_k)
+        labeled = ablation[-1][1]
+        for label, result in ablation:
+            print(f"  {label}：Top-{result.k} {result.hit_rate:.1f}%"
+                  f"（{result.top_k}/{result.n}）")
+    elif args.questions:
         print(f"运行人工标注评测：{args.questions}")
         labeled = labeled_eval(args.questions, retriever, top_k=args.top_k,
                                use_graph=config.graph_enabled)
@@ -117,12 +129,24 @@ def cmd_eval(args):
               f"（{labeled.top_k}/{labeled.n}）")
 
     if auto is None and labeled is None:
-        print("请指定 --auto 或 --questions <评测集 json>")
+        print("请指定 --auto、--questions <评测集 json> 或 --ablation")
         return 1
 
-    out = Path(args.output) if args.output else BASE_DIR / "reports" / "retrieval_eval.md"
-    write_report(out, auto, labeled, backend, config.graph_enabled)
+    default_name = "retrieval_ablation.md" if ablation else "retrieval_eval.md"
+    out = Path(args.output) if args.output else BASE_DIR / "reports" / default_name
+    write_report(out, auto, labeled, backend, config.graph_enabled, ablation=ablation)
     print(f"[OK] 评测报告已写入：{out}")
+    return 0
+
+
+def cmd_answer_eval(args):
+    output = args.output or BASE_DIR / "reports" / "answer_eval.md"
+    try:
+        path = write_answer_report(args.answers, output)
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        print(f"答案评审失败：{exc}")
+        return 1
+    print(f"[OK] 答案质量评审报告已写入：{path}")
     return 0
 
 
@@ -131,6 +155,7 @@ COMMANDS = {
     "query": cmd_query,
     "ask": cmd_ask,
     "eval": cmd_eval,
+    "answer-eval": cmd_answer_eval,
 }
 
 
@@ -171,14 +196,21 @@ def _build_parser():
     p.add_argument("--with-llm", action="store_true", help="真正调用大模型生成")
     p.set_defaults(func=cmd_ask)
 
-    p = sub.add_parser("eval", help="检索命中率评测")
+    p = sub.add_parser("eval", help="检索命中率与消融评测")
     p.add_argument("--questions", default=None, help="人工标注评测集 JSON")
     p.add_argument("--auto", action="store_true", help="运行自动体检评测")
+    p.add_argument("--ablation", action="store_true",
+                   help="比较纯向量、纯 BM25、混合检索与图谱扩展")
     p.add_argument("--sample", type=int, default=20, help="自动评测抽样块数")
     p.add_argument("--top-k", type=int, default=3)
-    p.add_argument("--no-graph", action="store_true", help="关闭图谱扩展召回")
+    p.add_argument("--no-graph", action="store_true", help="关闭图谱扩展召回；--ablation 会覆盖此选项")
     p.add_argument("--output", default=None, help="报告输出路径")
     p.set_defaults(func=cmd_eval)
+
+    p = sub.add_parser("answer-eval", help="汇总人工答案评审、引用格式、拒答、延迟与成本")
+    p.add_argument("--answers", required=True, help="填写完成的答案评审 JSON")
+    p.add_argument("--output", default=None, help="默认 reports/answer_eval.md")
+    p.set_defaults(func=cmd_answer_eval)
 
     parser.add_argument("-v", "--verbose", action="store_true", help="输出调试日志")
     return parser

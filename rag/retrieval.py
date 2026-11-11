@@ -73,7 +73,9 @@ def rrf_fuse(rank_lists, k=60, top_n=10):
 
 
 class HybridRetriever:
-    """向量 + BM25 混合检索（RRF 融合），可选术语共现图扩展。"""
+    """向量、BM25 单路或 RRF 混合检索，可选术语共现图扩展。"""
+
+    MODES = {"vector", "bm25", "hybrid"}
 
     def __init__(self, index, config):
         self.index = index
@@ -95,19 +97,24 @@ class HybridRetriever:
         order = np.argsort(-sims)[:k]
         return [(int(i), float(sims[i])) for i in order if sims[i] > 0]
 
-    def search(self, query, top_k=None, use_graph=None) -> list[Hit]:
+    def search(self, query, top_k=None, use_graph=None, mode="hybrid") -> list[Hit]:
+        if mode not in self.MODES:
+            raise ValueError(f"未知检索模式：{mode}（可选：{', '.join(sorted(self.MODES))}）")
         top_k = top_k or self.config.top_k
         use_graph = self.config.graph_enabled if use_graph is None else use_graph
         n_cand = max(self.config.fuse_candidates, top_k * 3)
 
-        dense_hits = self._dense_search(query, n_cand)
-        bm25_hits = self.bm25.search(query, n_cand)
+        dense_hits = [] if mode == "bm25" else self._dense_search(query, n_cand)
+        bm25_hits = [] if mode == "vector" else self.bm25.search(query, n_cand)
 
-        rank_lists = [("向量", [i for i, _ in dense_hits]),
-                      ("词法", [i for i, _ in bm25_hits])]
+        rank_lists = []
+        if mode != "bm25":
+            rank_lists.append(("向量", [i for i, _ in dense_hits]))
+        if mode != "vector":
+            rank_lists.append(("词法", [i for i, _ in bm25_hits]))
 
-        # 图谱扩展作为第三路参与 RRF：与向量/词法同为排名信号，量纲一致
-        if use_graph:
+        # 消融时单路检索不混入图谱；只有 hybrid 才启用第三路。
+        if mode == "hybrid" and use_graph:
             graph_rank = self._graph_candidates(query, dense_hits, n_cand)
             if graph_rank:
                 rank_lists.append(("图谱", graph_rank))

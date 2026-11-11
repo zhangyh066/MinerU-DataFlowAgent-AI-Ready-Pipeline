@@ -5,6 +5,8 @@
     python rag_cli.py query --query "问题"
     python rag_cli.py ask --question "问题" [--with-llm]
     python rag_cli.py eval --auto --questions eval_questions.json
+    python rag_cli.py eval --questions eval_questions.json --ablation
+    python rag_cli.py answer-eval --answers answer_eval_filled.json
 """
 
 import sys

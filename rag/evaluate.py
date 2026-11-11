@@ -34,7 +34,8 @@ def _hit_rank(hits, expect_source=None, expect_keywords=None):
     return None
 
 
-def auto_eval(retriever: HybridRetriever, sample=20, use_graph=None) -> EvalResult:
+def auto_eval(retriever: HybridRetriever, sample=20, use_graph=None,
+              mode="hybrid") -> EvalResult:
     """自动评测：取每块中间一段文字反查自身（下限体检，不等于真实效果）。"""
     chunks = retriever.chunks
     n = min(len(chunks), sample)
@@ -42,7 +43,7 @@ def auto_eval(retriever: HybridRetriever, sample=20, use_graph=None) -> EvalResu
     for c in chunks[:n]:
         start = min(len(c.text) // 2, max(0, len(c.text) - 60))
         probe = c.text[start:start + 60]
-        hits = retriever.search(probe, top_k=3, use_graph=use_graph)
+        hits = retriever.search(probe, top_k=3, use_graph=use_graph, mode=mode)
         rank = _hit_rank(hits, expect_source=c.doc_name,
                          expect_keywords=[probe[10:40]])
         if rank == 1:
@@ -53,7 +54,7 @@ def auto_eval(retriever: HybridRetriever, sample=20, use_graph=None) -> EvalResu
 
 
 def labeled_eval(questions_file, retriever: HybridRetriever, top_k=3,
-                 use_graph=None) -> EvalResult:
+                 use_graph=None, mode="hybrid") -> EvalResult:
     """人工标注评测：读评测集 JSON，算真实命中率。"""
     with open(questions_file, encoding="utf-8") as f:
         items = json.load(f)
@@ -61,7 +62,8 @@ def labeled_eval(questions_file, retriever: HybridRetriever, top_k=3,
     top1 = hit_k = 0
     misses = []
     for it in items:
-        hits = retriever.search(it["question"], top_k=top_k, use_graph=use_graph)
+        hits = retriever.search(it["question"], top_k=top_k, use_graph=use_graph,
+                                mode=mode)
         rank = _hit_rank(hits, expect_source=it.get("expect_source"),
                          expect_keywords=it.get("expect_keywords"))
         if rank == 1:
@@ -74,8 +76,23 @@ def labeled_eval(questions_file, retriever: HybridRetriever, top_k=3,
     return EvalResult(n=len(items), top1=top1, top_k=hit_k, k=top_k, misses=misses)
 
 
+def ablation_eval(questions_file, retriever: HybridRetriever, top_k=3):
+    """在同一批人工题上比较单路、混合和图谱扩展，避免跨题集比较。"""
+    configs = [
+        ("纯向量", "vector", False),
+        ("纯 BM25", "bm25", False),
+        ("向量 + BM25", "hybrid", False),
+        ("向量 + BM25 + 图谱", "hybrid", True),
+    ]
+    return [
+        (label, labeled_eval(questions_file, retriever, top_k=top_k,
+                             use_graph=use_graph, mode=mode))
+        for label, mode, use_graph in configs
+    ]
+
+
 def render_report(auto: EvalResult | None, labeled: EvalResult | None,
-                  backend: str, use_graph: bool) -> str:
+                  backend: str, use_graph: bool, ablation=None) -> str:
     lines = [
         "# 检索效果评测报告",
         "",
@@ -95,6 +112,22 @@ def render_report(auto: EvalResult | None, labeled: EvalResult | None,
             f"- 抽测块数：{auto.n}",
             f"- Top-1 命中：{auto.top1}/{auto.n}",
             f"- Top-{auto.k} 命中：{auto.top_k}/{auto.n}",
+        ]
+    if ablation:
+        lines += [
+            "",
+            "## 检索消融（同一批人工题）",
+            "",
+            "| 方案 | Top-1 | Top-3 | Top-3 命中率 |",
+            "| --- | ---: | ---: | ---: |",
+        ]
+        for label, result in ablation:
+            lines.append(
+                f"| {label} | {result.top1}/{result.n} | "
+                f"{result.top_k}/{result.n} | {result.hit_rate:.1f}% |")
+        lines += [
+            "",
+            "消融只用于观察这批题目上的相对变化；样本量较小时，不把分数差异外推为稳定收益。",
         ]
     if labeled:
         lines += [

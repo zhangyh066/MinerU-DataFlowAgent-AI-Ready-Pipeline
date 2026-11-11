@@ -583,10 +583,42 @@ data/rag_index/
 
 唯一未命中的人工题是用中文询问英文论文中的“社交媒体情绪与并购撤回”，召回到了中文媒体报道和并购文献。这暴露出跨语言检索仍是当前方案的短板。
 
-阅读这些数字时要注意：
+### 检索消融
+
+在同一批人工题上分别运行纯向量、纯 BM25、混合检索和图谱扩展：
+
+```bash
+python rag_cli.py eval --questions eval_questions.json --ablation
+```
+
+| 方案 | Top-1 | Top-3 |
+| --- | ---: | ---: |
+| 纯向量 | 7/8 | 7/8 |
+| 纯 BM25 | 7/8 | 7/8 |
+| 向量 + BM25 | 7/8 | 7/8 |
+| 向量 + BM25 + 图谱 | 7/8 | 7/8 |
+
+当前 8 道题没有拉开四种方案的差距，因此**不能据此宣称 BM25 或图谱带来了提升**。这份结果的作用是建立可重复的小样本基线，并说明下一步需要增加跨语言、专有名词、改写和多文档问题。完整报告见 `reports/retrieval_ablation.md`。
+
+### 答案质量人工评审
+
+`answer-eval` 将模型实际回答与人工标签汇总为独立报告，不把来源检索命中率当成答案正确率：
+
+1. 复制 `answer_eval_template.json`，每条填写实际 `answer` 和 `sources`；
+2. 人工填写 `answer_correct`、`citation_correct`、`faithful`，未评审保持 `null`；
+3. 可选填写 `should_refuse`、`latency_ms` 和 `cost`；
+4. 执行：
+
+```bash
+python rag_cli.py answer-eval --answers answer_eval_filled.json
+```
+
+程序自动检查拒答决策、非拒答答案的引用覆盖和引用编号范围，汇总人工答案正确率、引用语义正确率、事实一致率、平均/P95 延迟和成本。引用编号合法不代表引用语义正确，两类指标分别报告。仓库目前只提供评审模板与工具，**尚未把模板或未评审样本包装成答案质量结果**。
+
+阅读检索数字时要注意：
 
 - 人工评测只有 8 题，样本量很小，换题或扩充语料后需要重新评测；
-- 当前指标衡量“目标来源是否在 Top-K 中”，不是答案正确率、引用准确率或事实一致性；
+- 检索指标衡量“目标来源是否在 Top-K 中”，答案质量须使用上述独立人工评审；
 - 关键词命中采用任一关键词即可的宽松口径，详细规则见 `rag/evaluate.py`；
 - 自动反查和自然问题不是同一分布，两种数字不能直接比较；
 - 完整未命中记录见 `reports/retrieval_eval.md`。
@@ -611,11 +643,14 @@ data/rag_index/
 │   ├── graph.py                  # 术语共现图与两跳扩展
 │   ├── qa.py                     # 引用上下文、提示词和来源组装
 │   ├── llm.py                    # OpenAI 兼容生成客户端与指数退避重试
-│   ├── evaluate.py               # 自动体检、人工标注评测与报告
-│   └── cli.py                    # build / query / ask / eval 子命令
+│   ├── evaluate.py               # 自动体检、人工标注与四种检索消融
+│   ├── answer_eval.py            # 人工答案质量、引用、拒答、延迟与成本报告
+│   └── cli.py                    # build / query / ask / eval / answer-eval 子命令
 ├── eval_questions.json           # 8 道人工标注检索题
+├── answer_eval_template.json     # 答案评审填写模板，不是评测结果
 ├── requirements.txt              # Python 依赖
 ├── .env.example                  # 密钥配置模板，不含真实密钥
+├── .gitattributes                # 生成的 HTML 不计入 GitHub 语言统计
 ├── mineru_outputs/               # 15 篇样例的 MinerU 输出 JSON
 ├── input.json                    # 清洗后的统一输入
 ├── output_results_batch.json     # 结构化质量评估结果
@@ -626,6 +661,7 @@ data/rag_index/
 ├── report.html                   # 可直接打开的交互式评估报告
 ├── charts/                       # 质量、评分与关键词图
 ├── reports/retrieval_eval.md     # 检索评测与未命中分析
+├── reports/retrieval_ablation.md # 同一题集上的四种检索方案实测
 ├── all_summaries.txt             # 全部文献摘要合集
 ├── summary_report_batch.txt      # 评估统计文本报告
 └── 0基础读懂_MinerU_DataFlowAgent_教程.md  # 项目原理解读教程
@@ -641,10 +677,11 @@ data/rag_index/
 - 质量评分规则面向金融学术文献，迁移到其他领域应调整提示词和评测集；
 - 术语共现图提供关联召回，不提供实体关系抽取、规则推理或图数据库查询；
 - 索引采用全量构建，语料变更后需要 `--force` 重建，尚未做块级增量索引；
-- 当前检索评测规模较小，尚未系统评估生成答案的事实一致性与引用完整性；
+- 当前检索评测规模较小，四种方案在 8 道题上未拉开差距，不能证明混合检索或图谱的稳定收益；
+- 已提供答案质量人工评审工具，但仓库尚未包含经过人工复核的实际答案质量结果；
 - 原始论文与报告的版权属于原作者或机构，仓库样例用于研究与流程验证，其他用途需自行确认授权。
 
-后续可继续补充自动化测试与 CI、MinerU 命令统一入口、跨语言向量模型、块级增量索引，以及独立的问答正确性和引用忠实度评测。
+后续可继续补充自动化测试与 CI、MinerU 命令统一入口、跨语言向量模型和块级增量索引；评测侧应优先扩大题型覆盖，并实际完成答案正确性、引用语义与事实一致性人工评审。
 
 ## 作者
 

@@ -1,0 +1,2 @@
+# 生成的离线报告不计入 GitHub 主要语言统计
+report.html linguist-generated=true
