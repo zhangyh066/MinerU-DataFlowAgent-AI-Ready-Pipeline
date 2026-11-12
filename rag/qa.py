@@ -26,6 +26,8 @@ class Answer:
     prompt: str
     answer: str | None = None
     sources: list[dict] = field(default_factory=list)
+    trace_id: str | None = None
+    latency_ms: int | None = None
 
 
 def format_context(hits: list[Hit], query, width=220) -> str:
@@ -33,9 +35,9 @@ def format_context(hits: list[Hit], query, width=220) -> str:
     for n, hit in enumerate(hits, 1):
         c = hit.chunk
         meta = c.meta or {}
-        label = (f"[{n}] 《{c.doc_name}》"
-                 f"{f'（{meta.get("quality")} {meta.get("score")}分）' if meta.get('quality') else ''}"
-                 f"{f' 章节：{c.heading}' if c.heading else ''}")
+        quality = f"（{meta.get('quality')} {meta.get('score')}分）" if meta.get('quality') else ""
+        heading = f" 章节：{c.heading}" if c.heading else ""
+        label = f"[{n}] 《{c.doc_name}》{quality}{heading}"
         excerpt = best_excerpt(c.text, query, width)
         blocks.append(f"{label}\n{excerpt}")
     return "\n\n".join(blocks)
@@ -46,29 +48,69 @@ class QAPipeline:
         self.retriever = retriever
 
     def ask(self, question, top_k=None, use_graph=None, with_llm=False,
-            llm_client=None) -> Answer:
-        hits = self.retriever.search(question, top_k=top_k, use_graph=use_graph)
+            llm_client=None, observability=None) -> Answer:
+        import time
+        from contextlib import nullcontext
 
-        context = format_context(hits, question)
-        subgraph = self.retriever.subgraph_text(hits)
-        if subgraph:
-            context = context + "\n\n" + subgraph
-        prompt = PROMPT_TEMPLATE.format(context=context, question=question)
+        started = time.perf_counter()
+        metadata = {
+            "embed_backend": self.retriever.index.embedder.name,
+            "use_graph": self.retriever.config.graph_enabled if use_graph is None else use_graph,
+            "top_k": top_k or self.retriever.config.top_k,
+        }
+        manager = observability.trace(question, **metadata) if observability else nullcontext(None)
+        with manager as trace:
+            retrieval_started = time.perf_counter()
+            hits = self.retriever.search(question, top_k=top_k, use_graph=use_graph)
+            retrieval_ms = round((time.perf_counter() - retrieval_started) * 1000)
 
-        answer = None
-        if with_llm:
-            from .llm import LLMClient
-            client = llm_client or LLMClient()
-            log.info("调用 %s 生成答案…", client.config.llm_model)
-            answer = client.chat(prompt)
+            context = format_context(hits, question)
+            subgraph = self.retriever.subgraph_text(hits)
+            if subgraph:
+                context = context + "\n\n" + subgraph
+            prompt = PROMPT_TEMPLATE.format(context=context, question=question)
 
-        sources = [{
-            "doc_name": h.chunk.doc_name,
-            "score": round(h.score, 4),
-            "sources": h.sources,
-            "quality": (h.chunk.meta or {}).get("quality"),
-            "excerpt": best_excerpt(h.chunk.text, question, 120),
-        } for h in hits]
+            sources = [{
+                "doc_name": h.chunk.doc_name,
+                "score": round(h.score, 4),
+                "sources": h.sources,
+                "quality": (h.chunk.meta or {}).get("quality"),
+                "excerpt": best_excerpt(h.chunk.text, question, 120),
+            } for h in hits]
+            if trace:
+                trace.event(
+                    "retrieval",
+                    latency_ms=retrieval_ms,
+                    source_count=len(sources),
+                    documents=[source["doc_name"] for source in sources],
+                )
 
-        return Answer(question=question, hits=hits, prompt=prompt,
-                      answer=answer, sources=sources)
+            answer = None
+            generation_ms = None
+            if with_llm:
+                from .llm import LLMClient
+                client = llm_client or LLMClient()
+                log.info("调用 %s 生成答案…", client.config.llm_model)
+                generation_started = time.perf_counter()
+                answer = client.chat(prompt)
+                generation_ms = round((time.perf_counter() - generation_started) * 1000)
+
+            result = Answer(
+                question=question,
+                hits=hits,
+                prompt=prompt,
+                answer=answer,
+                sources=sources,
+                trace_id=trace.trace_id if trace else None,
+                latency_ms=round((time.perf_counter() - started) * 1000),
+            )
+            if trace:
+                trace.event(
+                    "answer",
+                    with_llm=with_llm,
+                    generation_ms=generation_ms,
+                    prompt_chars=len(prompt),
+                    answer_chars=len(answer or ""),
+                    latency_ms=round((time.perf_counter() - started) * 1000),
+                )
+            return result

@@ -333,6 +333,35 @@ python run_all.py --batch-size 1 --sleep 15 --max-retries 2 --charts-dir charts
 python rag_cli.py ask --question "金融科技通过什么机制影响银行风险承担？" --with-llm
 ```
 
+### 本地试用页与反馈闭环
+
+如需 OTLP 观测，先安装可选依赖，并在单独的终端启动 Phoenix 内存服务（Git Bash）：
+
+```bash
+python -m pip install arize-phoenix opentelemetry-exporter-otlp-proto-http
+PHOENIX_SQL_DATABASE_URL='sqlite:///:memory:' PHOENIX_DISABLE_MIGRATIONS=true \
+python -m phoenix.server.main serve --port 6006
+```
+
+然后启动试用页：
+
+```bash
+# 演示模式：只验证检索、引用与反馈，不调用付费模型，且明确标注演示回答
+python rag_web.py --demo --port 7860
+
+# 使用已配置的模型生成真实回答
+python rag_web.py --with-llm --port 7860
+
+# 同时导出 OTLP 调用链到本地 Phoenix
+python rag_web.py --demo --otlp http://127.0.0.1:6006/v1/traces
+```
+
+打开 `http://127.0.0.1:7860` 后可提问、展开引用、标记错误并提交反馈。`logs/rag_traces.jsonl` 记录检索、Prompt、版本和延迟，`logs/feedback.jsonl` 保存反馈与 trace ID；该目录已被 `.gitignore` 排除，不会上传用户问题。
+
+Phoenix 内存模式只用于本机功能验收，重启后调用链会清空，持久审计仍以 JSONL 为准；本机未部署 Langfuse。已实测 BGE 检索、反馈关联以及 Phoenix GraphQL 查询，详见 `docs/internal_acceptance.md`。
+
+试用页只允许监听本机回环地址。没有鉴权时不要暴露到局域网或公网。`--demo` 只用于功能验收，不能作为模型效果证据。真实用户试用方法见 `docs/user_trial.md`，内部实测记录见 `docs/internal_acceptance.md`。
+
 ### 处理自己的文献
 
 1. 使用 MinerU 将 PDF 解析为 JSON；
@@ -600,6 +629,23 @@ python rag_cli.py eval --questions eval_questions.json --ablation
 
 当前 8 道题没有拉开四种方案的差距，因此**不能据此宣称 BM25 或图谱带来了提升**。这份结果的作用是建立可重复的小样本基线，并说明下一步需要增加跨语言、专有名词、改写和多文档问题。完整报告见 `reports/retrieval_ablation.md`。
 
+### 扩充 46 题检索评测
+
+在原有 8 题基线之外，新增 46 道可核验检索题，覆盖事实、方法、样本、机制、比较和中英文问题：
+
+```bash
+python rag_cli.py eval --questions eval_questions_50.json --ablation --output reports/retrieval_ablation_50.md
+```
+
+| 方案 | Top-1 | Top-3 | Top-3 命中率 |
+| --- | ---: | ---: | ---: |
+| 纯向量 | 24/46 | 30/46 | 65.2% |
+| 纯 BM25 | 31/46 | 35/46 | 76.1% |
+| 向量 + BM25 | 29/46 | 32/46 | 69.6% |
+| 向量 + BM25 + 图谱 | 29/46 | 32/46 | 69.6% |
+
+这批结果说明 BM25 在当前题目上优于纯向量和混合方案，图谱仍未显示额外提升；不能外推为其他数据集上的稳定结论。未命中还包含“召回正确文献但关键词未落在同一分块”的情况，需人工区分检索失败与评测口径过严。另有 4 道无答案边界题与检索命中率分开，合计 50 个答案评审条目，见 `answer_eval_50_template.json`。
+
 ### 答案质量人工评审
 
 `answer-eval` 将模型实际回答与人工标签汇总为独立报告，不把来源检索命中率当成答案正确率：
@@ -633,6 +679,7 @@ python rag_cli.py answer-eval --answers answer_eval_filled.json
 ├── generate_report.py            # 离线交互式 HTML 与可选 PNG 图表
 ├── run_all.py                    # 五步流水线统一入口
 ├── rag_cli.py                    # RAG 命令行入口
+├── rag_web.py                    # 本地试用页、引用展开与反馈提交
 ├── rag/
 │   ├── config.py                 # 路径、切块、检索和 LLM 环境配置
 │   ├── chunking.py               # 句子切块、标题边界、contextual chunk
@@ -641,13 +688,16 @@ python rag_cli.py answer-eval --answers answer_eval_filled.json
 │   ├── store.py                  # 索引构建、保存、加载与后端一致性检查
 │   ├── retrieval.py              # BM25、RRF 与混合检索
 │   ├── graph.py                  # 术语共现图与两跳扩展
-│   ├── qa.py                     # 引用上下文、提示词和来源组装
+│   ├── qa.py                     # 引用上下文、提示词、来源组装与调用链记录
+│   ├── observability.py          # JSONL 审计与可选 OTLP 导出
 │   ├── llm.py                    # OpenAI 兼容生成客户端与指数退避重试
 │   ├── evaluate.py               # 自动体检、人工标注与四种检索消融
 │   ├── answer_eval.py            # 人工答案质量、引用、拒答、延迟与成本报告
 │   └── cli.py                    # build / query / ask / eval / answer-eval 子命令
 ├── eval_questions.json           # 8 道人工标注检索题
-├── answer_eval_template.json     # 答案评审填写模板，不是评测结果
+├── eval_questions_50.json        # 46 道扩充检索题
+├── answer_eval_template.json     # 单条答案评审模板，不是评测结果
+├── answer_eval_50_template.json  # 46 道检索题 + 4 道无答案边界题评审模板
 ├── requirements.txt              # Python 依赖
 ├── .env.example                  # 密钥配置模板，不含真实密钥
 ├── .gitattributes                # 生成的 HTML 不计入 GitHub 语言统计
@@ -661,13 +711,16 @@ python rag_cli.py answer-eval --answers answer_eval_filled.json
 ├── report.html                   # 可直接打开的交互式评估报告
 ├── charts/                       # 质量、评分与关键词图
 ├── reports/retrieval_eval.md     # 检索评测与未命中分析
-├── reports/retrieval_ablation.md # 同一题集上的四种检索方案实测
+├── reports/retrieval_ablation.md # 原 8 题四种检索方案实测
+├── reports/retrieval_ablation_50.md # 扩充 46 题四种检索方案实测
+├── docs/user_trial.md            # 真实用户试用任务与记录模板
+├── docs/internal_acceptance.md   # 内部实测与未完成事项
 ├── all_summaries.txt             # 全部文献摘要合集
 ├── summary_report_batch.txt      # 评估统计文本报告
 └── 0基础读懂_MinerU_DataFlowAgent_教程.md  # 项目原理解读教程
 ```
 
-以下本地内容不上传：`.env`、`eval_cache.jsonl`、`data/rag_index/`、Python 缓存、虚拟环境和 IDE 配置。
+以下本地内容不上传：`.env`、`eval_cache.jsonl`、`data/rag_index/`、`logs/`（试用问题与反馈）、Python 缓存、虚拟环境和 IDE 配置。
 
 ## 当前边界与后续方向
 

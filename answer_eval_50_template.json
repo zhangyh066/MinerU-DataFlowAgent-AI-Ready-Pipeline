@@ -1,0 +1,900 @@
+{
+  "description": "50 题答案评审模板：46 道可检索题 + 4 道无答案边界题。填入实际答案与来源后人工评审，null 表示未评审。",
+  "items": [
+    {
+      "id": 1,
+      "question_type": "direct",
+      "question": "为什么有些企业边际产出低却仍保持高投资？",
+      "expect_source": "Investing in misallocation",
+      "expect_keywords": [
+        "misallocation",
+        "productivity"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 2,
+      "question_type": "sample",
+      "question": "高投资低边际产出的企业大约占多大比例？",
+      "expect_source": "Investing in misallocation",
+      "expect_keywords": [
+        "20%",
+        "firms"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 3,
+      "question_type": "counterfactual",
+      "question": "消除表面上的资本错配会对总生产率产生什么影响？",
+      "expect_source": "Investing in misallocation",
+      "expect_keywords": [
+        "43%",
+        "productivity"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 4,
+      "question_type": "direct",
+      "question": "负面社交媒体情绪与并购撤回之间有什么关系？",
+      "expect_source": "COOKSON",
+      "expect_keywords": [
+        "withdrawal",
+        "sentiment"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 5,
+      "question_type": "heterogeneity",
+      "question": "企业开设官方 Twitter 账号后，社交媒体情绪对并购撤回的影响有何变化？",
+      "expect_source": "COOKSON",
+      "expect_keywords": [
+        "Twitter",
+        "withdrawal"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 6,
+      "question_type": "mechanism",
+      "question": "社交媒体影响并购撤回更支持管理者学习机制还是治理机制？",
+      "expect_source": "COOKSON",
+      "expect_keywords": [
+        "learning",
+        "manager"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 7,
+      "question_type": "direct",
+      "question": "活期存款每增长1%会驱动超额准备金增长多少？",
+      "expect_source": "中国商业银行超额准备金持有的驱动机制研究",
+      "expect_keywords": [
+        "0.55",
+        "0.60"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 8,
+      "question_type": "mechanism",
+      "question": "央行公告如何影响银行持有超额准备金的预防性动机？",
+      "expect_source": "中国商业银行超额准备金持有的驱动机制研究",
+      "expect_keywords": [
+        "不确定性",
+        "预防性"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 9,
+      "question_type": "heterogeneity",
+      "question": "大型银行和中小型银行对短期利率信号的反应有何不同？",
+      "expect_source": "中国商业银行超额准备金持有的驱动机制研究",
+      "expect_keywords": [
+        "钝化",
+        "风险-成本"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 10,
+      "question_type": "direct",
+      "question": "准备金相对充足程度被划分为哪三个层级？",
+      "expect_source": "中国市场化利率调控体系改革思考",
+      "expect_keywords": [
+        "稀缺",
+        "海量",
+        "中等规模"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 11,
+      "question_type": "direct",
+      "question": "中国银行体系当前处于哪个准备金规模层级？",
+      "expect_source": "中国市场化利率调控体系改革思考",
+      "expect_keywords": [
+        "中等规模",
+        "准备金"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 12,
+      "question_type": "policy",
+      "question": "市场化利率调控体系改革为什么要把利率走廊和利率地板结合起来？",
+      "expect_source": "中国市场化利率调控体系改革思考",
+      "expect_keywords": [
+        "利率走廊",
+        "利率地板"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 13,
+      "question_type": "direct",
+      "question": "金融科技发展能否提高资本市场信息效率？",
+      "expect_source": "中国金融科技发展对资本市场信息效率的影响研究",
+      "expect_keywords": [
+        "信息效率",
+        "金融科技"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 14,
+      "question_type": "heterogeneity",
+      "question": "金融科技对资本市场信息效率的影响在东部、中部和西部地区有何差异？",
+      "expect_source": "中国金融科技发展对资本市场信息效率的影响研究",
+      "expect_keywords": [
+        "西部",
+        "中部",
+        "东部"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 15,
+      "question_type": "mechanism",
+      "question": "金融科技影响资本市场信息效率的三类中介机制是什么？",
+      "expect_source": "中国金融科技发展对资本市场信息效率的影响研究",
+      "expect_keywords": [
+        "信息效应",
+        "补助效应",
+        "关注效应"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 16,
+      "question_type": "direct",
+      "question": "基金经理媒体报道数量增加1%会使投资者净申购率增加多少？",
+      "expect_source": "基金经理媒体报道与个体投资者行为",
+      "expect_keywords": [
+        "1.22%",
+        "净申购率"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 17,
+      "question_type": "mechanism",
+      "question": "基金经理媒体报道影响申赎行为主要来自学习效应还是有限关注？",
+      "expect_source": "基金经理媒体报道与个体投资者行为",
+      "expect_keywords": [
+        "有限关注",
+        "学习效应"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 18,
+      "question_type": "direct",
+      "question": "基金经理媒体报道能否预测未来基金收益率？",
+      "expect_source": "基金经理媒体报道与个体投资者行为",
+      "expect_keywords": [
+        "无法预测",
+        "收益率"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 19,
+      "question_type": "direct",
+      "question": "境内并购和跨境并购对企业创新的影响有什么不同？",
+      "expect_source": "并购模式与企业创新",
+      "expect_keywords": [
+        "跨境并购",
+        "创新"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 20,
+      "question_type": "mechanism",
+      "question": "并购通过什么效率提升效应和资源替代效应影响企业创新？",
+      "expect_source": "并购模式与企业创新",
+      "expect_keywords": [
+        "效率提升",
+        "资源替代"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 21,
+      "question_type": "heterogeneity",
+      "question": "哪种并购模式会通过提升市场势力抑制创新？",
+      "expect_source": "并购模式与企业创新",
+      "expect_keywords": [
+        "境内并购",
+        "市场势力"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 22,
+      "question_type": "direct",
+      "question": "算法交易对市场流动性和价格波动有什么影响？",
+      "expect_source": "算法交易的市场影响",
+      "expect_keywords": [
+        "流动性",
+        "波动"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 23,
+      "question_type": "mechanism",
+      "question": "算法交易为什么会降低市场信息效率？",
+      "expect_source": "算法交易的市场影响",
+      "expect_keywords": [
+        "知情交易者",
+        "卖空交易者"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 24,
+      "question_type": "heterogeneity",
+      "question": "算法交易的双重影响在哪类公司中更加显著？",
+      "expect_source": "算法交易的市场影响",
+      "expect_keywords": [
+        "非国有",
+        "中小规模",
+        "信息披露质量"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 25,
+      "question_type": "direct",
+      "question": "金融科技对商业银行流动性创造的总体影响是促进还是抑制？",
+      "expect_source": "金融科技与商业银行流动性创造：抑制还是促进",
+      "expect_keywords": [
+        "技术溢出",
+        "市场挤出"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 26,
+      "question_type": "mechanism",
+      "question": "金融科技如何分别影响银行资产端和负债端的流动性创造？",
+      "expect_source": "金融科技与商业银行流动性创造：抑制还是促进",
+      "expect_keywords": [
+        "资产端",
+        "负债端"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 27,
+      "question_type": "heterogeneity",
+      "question": "金融科技对哪些地区或类型银行的流动性创造促进作用更明显？",
+      "expect_source": "金融科技与商业银行流动性创造：抑制还是促进",
+      "expect_keywords": [
+        "东部地区",
+        "全国性银行"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 28,
+      "question_type": "direct",
+      "question": "哪篇论文认为外部竞争效应大于技术溢出效应并抑制银行流动性创造？",
+      "expect_source": "金融科技与银行行为——基于流动性创造视角",
+      "expect_keywords": [
+        "外部竞争",
+        "技术溢出"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 29,
+      "question_type": "mechanism",
+      "question": "金融科技通过哪些渠道抑制银行流动性创造？",
+      "expect_source": "金融科技与银行行为——基于流动性创造视角",
+      "expect_keywords": [
+        "经营效率",
+        "风险承担"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 30,
+      "question_type": "heterogeneity",
+      "question": "高市场化地区银行的流动性创造受到什么影响？",
+      "expect_source": "金融科技与银行行为——基于流动性创造视角",
+      "expect_keywords": [
+        "高市场化",
+        "抑制"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 31,
+      "question_type": "direct",
+      "question": "互联网理财如何改变传统银行的负债结构？",
+      "expect_source": "金融科技对传统银行行为的影响",
+      "expect_keywords": [
+        "同业拆借",
+        "批发性融资"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 32,
+      "question_type": "mechanism",
+      "question": "金融科技影响银行风险承担、贷款利率和净息差的结果分别是什么？",
+      "expect_source": "金融科技对传统银行行为的影响",
+      "expect_keywords": [
+        "风险承担",
+        "净息差"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 33,
+      "question_type": "heterogeneity",
+      "question": "规模大小不同的银行受到金融科技冲击的程度有何差异？",
+      "expect_source": "金融科技对传统银行行为的影响",
+      "expect_keywords": [
+        "规模越大",
+        "冲击越小"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 34,
+      "question_type": "direct",
+      "question": "金融科技对银行主动风险承担和被动风险承担分别有什么影响？",
+      "expect_source": "金融科技对银行风险的影响研究",
+      "expect_keywords": [
+        "主动风险承担",
+        "被动风险承担"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 35,
+      "question_type": "mechanism",
+      "question": "金融科技如何通过流动性创造和经营效率影响银行风险？",
+      "expect_source": "金融科技对银行风险的影响研究",
+      "expect_keywords": [
+        "流动性创造",
+        "经营效率"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 36,
+      "question_type": "heterogeneity",
+      "question": "资本充足率不同的银行在资产数量和质量上的选择有何差异？",
+      "expect_source": "金融科技对银行风险的影响研究",
+      "expect_keywords": [
+        "资本充足率",
+        "数量",
+        "质量"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 37,
+      "question_type": "direct",
+      "question": "监管沙盒试点对实体企业尤其是实质性创新有什么影响？",
+      "expect_source": "金融科技监管与实体企业创新",
+      "expect_keywords": [
+        "实质性创新",
+        "监管沙盒"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 38,
+      "question_type": "mechanism",
+      "question": "监管沙盒通过哪些渠道推动企业创新？",
+      "expect_source": "金融科技监管与实体企业创新",
+      "expect_keywords": [
+        "债务融资成本",
+        "财务风险"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 39,
+      "question_type": "direct",
+      "question": "监管沙盒试点校正了传统金融体系中的哪些错配？",
+      "expect_source": "金融科技监管与实体企业创新",
+      "expect_keywords": [
+        "属性错配",
+        "领域错配",
+        "阶段错配",
+        "信息错配"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 40,
+      "question_type": "comparison",
+      "question": "哪篇论文认为金融科技能够促进银行流动性创造？",
+      "expect_source": "金融科技与商业银行流动性创造：抑制还是促进",
+      "expect_keywords": [
+        "提升",
+        "流动性创造"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 41,
+      "question_type": "comparison",
+      "question": "哪篇论文认为金融科技会抑制银行流动性创造？",
+      "expect_source": "金融科技与银行行为——基于流动性创造视角",
+      "expect_keywords": [
+        "抑制",
+        "流动性创造"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 42,
+      "question_type": "comparison",
+      "question": "跨境并购和监管沙盒促进创新的机制有何不同？",
+      "expect_source": "并购模式与企业创新",
+      "expect_keywords": [
+        "跨境并购",
+        "效率提升"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 43,
+      "question_type": "comparison",
+      "question": "算法交易和一般金融科技对资本市场信息效率的影响有何不同？",
+      "expect_source": "算法交易的市场影响",
+      "expect_keywords": [
+        "信息效率",
+        "算法交易"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 44,
+      "question_type": "english",
+      "question": "Which social platforms were used to study merger withdrawals in the COOKSON paper?",
+      "expect_source": "COOKSON",
+      "expect_keywords": [
+        "StockTwits",
+        "Twitter"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 45,
+      "question_type": "english",
+      "question": "What predicts future aggregate productivity growth in Investing in Misallocation?",
+      "expect_source": "Investing in misallocation",
+      "expect_keywords": [
+        "investment",
+        "productivity"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 46,
+      "question_type": "english",
+      "question": "What kinds of tweets are most associated with merger withdrawals in the COOKSON study?",
+      "expect_source": "COOKSON",
+      "expect_keywords": [
+        "longer",
+        "detailed"
+      ],
+      "answer": "",
+      "sources": [],
+      "should_refuse": false,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 47,
+      "question_type": "unanswerable",
+      "question": "这些论文是否证明金融科技必然降低所有银行的风险？",
+      "expect_source": "金融科技对银行风险的影响研究",
+      "expect_keywords": [],
+      "answer": "",
+      "sources": [],
+      "should_refuse": true,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 48,
+      "question_type": "unanswerable",
+      "question": "监管沙盒试点使哪家具体上市公司的利润在2023年翻了一倍？",
+      "expect_source": "金融科技监管与实体企业创新",
+      "expect_keywords": [],
+      "answer": "",
+      "sources": [],
+      "should_refuse": true,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 49,
+      "question_type": "unanswerable",
+      "question": "美联储下一次加息的准确日期是哪一天？",
+      "expect_source": null,
+      "expect_keywords": [],
+      "answer": "",
+      "sources": [],
+      "should_refuse": true,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    },
+    {
+      "id": 50,
+      "question_type": "unanswerable",
+      "question": "中国最大的银行是哪家？",
+      "expect_source": null,
+      "expect_keywords": [],
+      "answer": "",
+      "sources": [],
+      "should_refuse": true,
+      "answer_correct": null,
+      "citation_correct": null,
+      "faithful": null,
+      "latency_ms": null,
+      "cost": null
+    }
+  ]
+}

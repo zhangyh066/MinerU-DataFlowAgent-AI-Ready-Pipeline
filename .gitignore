@@ -12,10 +12,19 @@ __pycache__/
 *.pyc
 *.pyo
 .venv/
+.venv-phoenix/
 venv/
+
+# 试用问题、调用链与用户反馈，不上传
+logs/
 
 # 本地求职材料：包含联系方式，不上传公开项目
 resume_versions/
+
+# 独立 RetailRocket 分析项目与下载缓存（有自己的 README 和 .gitignore）
+retailrocket-product-analytics/
+.uv-cache/
+retailrocket_ecommerce-dataset.zip
 
 # IDE / 系统
 .idea/
